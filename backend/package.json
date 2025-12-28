@@ -7,9 +7,8 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/app.js",
-    "start": "node src/app.js",
-    "prod": "pm2 src/app.js"
+  "dev": "nodemon app.js",
+  "start": "node app.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
