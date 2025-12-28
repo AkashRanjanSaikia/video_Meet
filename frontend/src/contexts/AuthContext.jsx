@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 export const AuthContext = createContext({});
 
 const client = axios.create({
-    baseURL: "http://localhost:8000/api/v1/users"
+    baseURL: "https://videomeet-8y4i.onrender.com/api/v1/users"
 })
 
 export const AuthProvider = ({ children }) => {

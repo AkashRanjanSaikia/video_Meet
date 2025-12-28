@@ -11,7 +11,7 @@ import MicOffIcon from '@mui/icons-material/MicOff';
 import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import StopScreenShareIcon from '@mui/icons-material/StopScreenShare';
 import ChatIcon from '@mui/icons-material/Chat';
-const server_url = "http://localhost:8000/";
+const server_url = "https://videomeet-8y4i.onrender.com";
 import { silence, black } from '../Helper/helper'
 import { AuthContext } from '../contexts/AuthContext';
 import withValidMeeting from "../utils/withValidMeeting";

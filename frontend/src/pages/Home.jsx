@@ -24,7 +24,7 @@ const Home = () => {
       setSnackbarOpen(true);
       return;
     }
-    const res = await fetch("http://localhost:8000/api/meetings/create", {
+    const res = await fetch("https://videomeet-8y4i.onrender.com/api/meetings/create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userName: localStorage.getItem("userName") }),
@@ -37,7 +37,7 @@ const Home = () => {
   const handleJoinMeeting = async (e) => {
     e.preventDefault();
     if (meetingId.trim()) {
-      const res = await fetch(`http://localhost:8000/api/meetings/join/${meetingId}`);
+      const res = await fetch(`https://videomeet-8y4i.onrender.com/api/meetings/join/${meetingId}`);
       const data = await res.json();
       if (data.success) {
         navigate(`/${meetingId}`);
