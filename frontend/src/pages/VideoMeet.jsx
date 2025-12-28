@@ -11,10 +11,11 @@ import MicOffIcon from '@mui/icons-material/MicOff';
 import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import StopScreenShareIcon from '@mui/icons-material/StopScreenShare';
 import ChatIcon from '@mui/icons-material/Chat';
-const server_url = "https://videomeet-8y4i.onrender.com";
 import { silence, black } from '../Helper/helper'
 import { AuthContext } from '../contexts/AuthContext';
 import withValidMeeting from "../utils/withValidMeeting";
+
+const server_url = "https://videomeet-8y4i.onrender.com";
 var connections = {};
 const peerConfigConnections = {
     "iceServers": [
@@ -55,12 +56,14 @@ function VideoMeetComponent() {
             setUsername(userData);
         }
     }, [userData])
+
     useEffect(() => {
         if (video !== undefined && audio !== undefined) {
             getUserMedia();
             console.log("SET STATE HAS ", video, audio);
         }
     }, [video, audio])
+
     useEffect(() => {
         if (screen !== undefined) {
             getDisplayMedia();
@@ -97,8 +100,7 @@ function VideoMeetComponent() {
             routeTo("/home");
 
         } catch (e) {
-
-
+            console.log(e);
         }
     }
     let handleVideo = () => {
