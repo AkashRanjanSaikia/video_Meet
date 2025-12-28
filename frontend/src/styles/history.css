@@ -1,0 +1,223 @@
+.history-root {
+  min-height: 100vh;
+  background: linear-gradient(180deg, hsl(220 25% 12%) 0%, hsl(220 25% 10%) 100%);
+  color: #e5e7eb;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* App Bar */
+.history-appbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(17, 25, 40, 0.95);
+  border-bottom: 1px solid rgba(17, 222, 254, 0.12);
+  backdrop-filter: blur(8px);
+}
+
+.history-appbar-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.history-appbar-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.history-appbar-gradient {
+  background: linear-gradient(135deg, #11defe, #0db5d0);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.history-back-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #e5e7eb;
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.history-back-btn:hover {
+  background: rgba(17, 222, 254, 0.08);
+  border-color: rgba(17, 222, 254, 0.5);
+}
+
+/* Main */
+.history-main-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 20px 40px;
+}
+
+.history-heading {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+
+/* List */
+.history-meetings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.history-meeting-card {
+  background: rgba(17, 25, 40, 0.95);
+  border: 1px solid rgba(17, 222, 254, 0.1);
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.history-meeting-card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 16px;
+  gap: 12px;
+}
+
+.history-meeting-card-info {
+  display: flex;
+  align-items: center;
+}
+
+.history-meeting-code-row {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.history-meeting-label {
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.history-meeting-code {
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: #e5e7eb;
+}
+
+.history-meeting-details {
+  margin-top: 6px;
+  display: flex;
+  gap: 14px;
+  color: #cbd5e1;
+}
+
+.history-date,
+.history-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #9ca3af;
+}
+
+.history-join-btn {
+  background: linear-gradient(135deg, #11defe, #0db5d0);
+  color: #0a0f1a;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.history-join-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(17, 222, 254, 0.25);
+}
+
+/* Empty */
+.history-empty-card {
+  text-align: center;
+  background: rgba(17, 25, 40, 0.95);
+  border: 1px solid rgba(17, 222, 254, 0.1);
+  border-radius: 14px;
+  padding: 28px 20px;
+}
+
+.history-empty-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.history-empty-desc {
+  color: #9ca3af;
+  margin-bottom: 14px;
+}
+
+.history-start-btn {
+  background: linear-gradient(135deg, #11defe, #0db5d0);
+  color: #0a0f1a;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.history-start-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(17, 222, 254, 0.25);
+}
+
+/* Icons & Spinner */
+.history-icon {
+  display: inline-flex;
+}
+
+.history-appicon {
+  display: inline-flex;
+}
+
+.history-spinner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.history-spinner-circle {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(17, 222, 254, 0.25);
+  border-top-color: #11defe;
+  border-radius: 50%;
+  animation: history-spin 0.9s linear infinite;
+}
+
+@keyframes history-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .history-meeting-card-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .history-join-btn {
+    width: 100%;
+  }
+}
+
+

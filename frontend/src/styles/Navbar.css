@@ -1,0 +1,21 @@
+.nav{
+    display: flex;
+    justify-content:flex-end;
+    padding: 1.5rem;
+}
+
+.navbar-history-btn {
+  color: #fff !important;
+  background: rgba(17, 222, 254, 0.1);
+  border: 1px solid rgba(60, 95, 137, 0.3);
+  padding: 6px 14px;
+  border-radius: 8px;
+  margin-right: 12px;
+  text-transform: none;
+  transition: background 0.18s, border-color 0.18s;
+}
+
+.navbar-history-btn:hover {
+  background: rgba(17, 222, 254, 0.1);
+  border-color: rgba(17, 222, 254, 0.5);
+}
