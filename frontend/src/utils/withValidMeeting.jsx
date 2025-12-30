@@ -10,7 +10,7 @@ const withValidMeeting = (WrappedComponent) => {
     useEffect(() => {
       (async () => {
         try {
-          const res = await fetch(`https://videomeet-8y4i.onrender.com/api/meetings/join/${url}`);
+          const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/meetings/join/${url}`);
           const data = await res.json();
 
           if (data.success) setIsValid(true);

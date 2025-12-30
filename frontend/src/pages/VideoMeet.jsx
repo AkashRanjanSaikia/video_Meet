@@ -15,7 +15,9 @@ import { silence, black } from '../Helper/helper'
 import { AuthContext } from '../contexts/AuthContext';
 import withValidMeeting from "../utils/withValidMeeting";
 
-const server_url = "https://videomeet-8y4i.onrender.com";
+
+const server_url = import.meta.env.VITE_BACKEND_URL;
+
 var connections = {};
 const peerConfigConnections = {
     "iceServers": [
@@ -25,6 +27,7 @@ const peerConfigConnections = {
 function VideoMeetComponent() {
     let routeTo = useNavigate();
     const { userData } = useContext(AuthContext);
+
     var socketRef = useRef();
     let socketIdRef = useRef();
     let localVideoref = useRef();
@@ -51,8 +54,7 @@ function VideoMeetComponent() {
     useEffect(() => {
         console.log("HELLO")
         getPermissions();
-        // Auto-fill username from AuthContext if available
-        if (userData && typeof userData === 'string') {
+        if (userData && typeof userData === 'string') {         // Auto-fill username from AuthContext if available
             setUsername(userData);
         }
     }, [userData])
@@ -70,83 +72,74 @@ function VideoMeetComponent() {
         }
     }, [screen])
 
-    let handleScreen = () => {
-        setScreen(!screen)
-    }
-    let handleChat = () => {
-        setModal(!showModal)
-    }
-    let sendMessage = () => {
-        const displayUsername = username || (userData && typeof userData === 'string' ? userData : 'User');
-        socketRef.current.emit("chat-message", message, displayUsername);
-        setMessage("");
-    }
-    const addMessage = (data, sender, socketIdSender) => {
-        setMessages((prevMessages) => [
-            ...prevMessages,
-            { sender: sender, data: data }
+    // const getPermissions = async () => {
+    //     try {
+    //         const videoPermission = await navigator.mediaDevices.getUserMedia({ video: true });
+    //         if (videoPermission) {
+    //             setVideoAvailable(true);
+    //             console.log('Video permission granted');
+    //         } else {
+    //             setVideoAvailable(false);
+    //             console.log('Video permission denied');
+    //         }
 
-        ])
-        if (socketIdSender !== socketIdRef.current) {
-            setNewMessages((prevMessages) => prevMessages + 1)
+    //         const audioPermission = await navigator.mediaDevices.getUserMedia({ audio: true });
+    //         if (audioPermission) {
+    //             setAudioAvailable(true);
+    //             console.log('Audio permission granted');
+    //         } else {
+    //             setAudioAvailable(false);
+    //             console.log('Audio permission denied');
+    //         }
 
-        }
-    };
-    const handleEndCall = () => {
-        try {
-            let tracks = localVideoref.current.srcObject.getTracks();
-            tracks.forEach(track => track.stop());
-            socketRef.current.emit("end-call");
-            routeTo("/home");
 
-        } catch (e) {
-            console.log(e);
-        }
-    }
-    let handleVideo = () => {
-        setVideo(!video);
-        // getUserMedia();
-    }
-    let handleAudio = () => {
-        setAudio(!audio)
-        // getUserMedia();
-    }
-    
+
+    //         if (videoAvailable || audioAvailable) {
+    //             const userMediaStream = await navigator.mediaDevices.getUserMedia({ video: videoAvailable, audio: audioAvailable });
+    //             if (userMediaStream) {
+    //                 window.localStream = userMediaStream;
+    //                 if (localVideoref.current) {
+    //                     localVideoref.current.srcObject = userMediaStream;
+    //                 }
+    //             }
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
     const getPermissions = async () => {
         try {
-            const videoPermission = await navigator.mediaDevices.getUserMedia({ video: true });
-            if (videoPermission) {
+            // 1. Request both at once (Standard WebRTC Practice)
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: true,
+                audio: true
+            });
+
+            // 2. Handle Success
+            if (stream) {
                 setVideoAvailable(true);
-                console.log('Video permission granted');
-            } else {
-                setVideoAvailable(false);
-                console.log('Video permission denied');
-            }
-
-            const audioPermission = await navigator.mediaDevices.getUserMedia({ audio: true });
-            if (audioPermission) {
                 setAudioAvailable(true);
-                console.log('Audio permission granted');
-            } else {
-                setAudioAvailable(false);
-                console.log('Audio permission denied');
-            }
 
+                // Store in a global/window variable if needed for your signaling logic
+                window.localStream = stream;
 
-
-            if (videoAvailable || audioAvailable) {
-                const userMediaStream = await navigator.mediaDevices.getUserMedia({ video: videoAvailable, audio: audioAvailable });
-                if (userMediaStream) {
-                    window.localStream = userMediaStream;
-                    if (localVideoref.current) {
-                        localVideoref.current.srcObject = userMediaStream;
-                    }
+                // 3. Attach to Video Element
+                if (localVideoref.current) {
+                    localVideoref.current.srcObject = stream;
                 }
             }
         } catch (error) {
-            console.log(error);
+         
+            console.error("Error accessing media devices:", error.name);
+
+            if (error.name === 'NotAllowedError') {
+                alert("Permissions were denied. Please enable camera/mic access.");
+            } else if (error.name === 'NotFoundError') {
+                alert("No camera or microphone found on this device.");
+            }
         }
     };
+
     let getDisplayMediaSuccess = (stream) => {
         try {
             window.localStream.getTracks().forEach(track => track.stop())
@@ -300,9 +293,9 @@ function VideoMeetComponent() {
             socketRef.current.on('existing-usernames', (usernames) => {
                 setUserNamesMap(prev => ({ ...prev, ...usernames }))
                 // Update videos array with usernames
-                setVideos(videos => 
-                    videos.map(video => 
-                        usernames[video.socketId] 
+                setVideos(videos =>
+                    videos.map(video =>
+                        usernames[video.socketId]
                             ? { ...video, username: usernames[video.socketId] }
                             : video
                     )
@@ -323,9 +316,9 @@ function VideoMeetComponent() {
                 if (joinedUsername) {
                     setUserNamesMap(prev => ({ ...prev, [id]: joinedUsername }))
                     // Update videos array if video exists for this socketId
-                    setVideos(videos => 
-                        videos.map(video => 
-                            video.socketId === id 
+                    setVideos(videos =>
+                        videos.map(video =>
+                            video.socketId === id
                                 ? { ...video, username: joinedUsername }
                                 : video
                         )
@@ -415,10 +408,56 @@ function VideoMeetComponent() {
         connectToSocketServer();
 
     }
+
+    const handleEndCall = () => {
+        try {
+            let tracks = localVideoref.current.srcObject.getTracks();
+            tracks.forEach(track => track.stop());
+            socketRef.current.emit("end-call");
+            routeTo("/home");
+
+        } catch (e) {
+            console.log(e);
+        }
+    }
+    let handleVideo = () => {
+        setVideo(!video);
+        // getUserMedia();
+    }
+    let handleAudio = () => {
+        setAudio(!audio)
+        // getUserMedia();
+    }
+
+    let handleScreen = () => {
+        setScreen(!screen)
+    }
+    let handleChat = () => {
+        setModal(!showModal)
+    }
+    let sendMessage = () => {
+        const displayUsername = username || (userData && typeof userData === 'string' ? userData : 'User');
+        socketRef.current.emit("chat-message", message, displayUsername);
+        setMessage("");
+    }
+    const addMessage = (data, sender, socketIdSender) => {
+        setMessages((prevMessages) => [
+            ...prevMessages,
+            { sender: sender, data: data }
+
+        ])
+        if (socketIdSender !== socketIdRef.current) {
+            setNewMessages((prevMessages) => prevMessages + 1)
+
+        }
+    };
+
     let connect = () => {
         setAskForUsername(false);
         getMedia();
     }
+
+
 
     return (
         <div>
