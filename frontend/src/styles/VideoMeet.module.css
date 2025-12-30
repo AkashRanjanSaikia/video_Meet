@@ -85,6 +85,7 @@
   border-radius: 8px;
   border: 2px solid #4285f4;
   object-fit: cover;
+  background-color: black;
 }
 
 .buttonContainers {
@@ -168,6 +169,7 @@
   object-fit: cover;
   display: block;
   border-radius: inherit;
+  background-color: black; /* Force black background to prevent transparency */
 }
 
 
