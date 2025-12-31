@@ -19,3 +19,14 @@
   background: rgba(17, 222, 254, 0.1);
   border-color: rgba(17, 222, 254, 0.5);
 }
+
+@media (max-width: 768px) {
+  .nav {
+    justify-content: center;
+    padding: 1rem;
+  }
+  .navbar-history-btn {
+    padding: 6px 12px;
+    margin-right: 8px;
+  }
+}

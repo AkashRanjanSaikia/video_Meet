@@ -149,6 +149,36 @@
 .history-empty-card {
   text-align: center;
   background: rgba(17, 25, 40, 0.95);
+}
+
+@media (max-width: 768px) {
+  .history-appbar-container {
+    padding: 12px 14px;
+  }
+  .history-main-container {
+    padding: 16px 14px 28px;
+  }
+  .history-heading {
+    font-size: 1.4rem;
+  }
+  .history-meeting-card-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .history-join-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .history-heading {
+    font-size: 1.2rem;
+  }
+  .history-meeting-details {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
   border: 1px solid rgba(17, 222, 254, 0.1);
   border-radius: 14px;
   padding: 28px 20px;

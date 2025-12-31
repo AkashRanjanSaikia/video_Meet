@@ -359,3 +359,64 @@
   flex: 1;
 }
 
+@media (max-width: 768px) {
+  .conferenceView {
+    gap: 0.5rem;
+    padding: 0.5rem;
+    padding-bottom: 70px;
+    height: 100vh;
+  }
+  .videoWrapper {
+    flex: 1 1 100%;
+    max-width: 100%;
+    max-height: 38vh;
+  }
+  .conferenceView:has(.videoWrapper:nth-child(2):nth-last-child(1)) .videoWrapper {
+    max-width: 100%;
+    max-height: 38vh;
+  }
+  .conferenceView:has(.videoWrapper:nth-child(n+3)) .videoWrapper {
+    flex: 1 1 48%;
+    max-width: 48%;
+    max-height: 30vh;
+  }
+  .conferenceView:has(.videoWrapper:nth-child(n+5)) .videoWrapper {
+    flex: 1 1 32%;
+    max-width: 32%;
+    max-height: 24vh;
+  }
+  .localVideoWrapper {
+    width: 160px;
+    height: 120px;
+    bottom: 70px;
+    right: 12px;
+  }
+  .buttonContainers {
+    bottom: 8px;
+    left: 0;
+    transform: none;
+    width: 100%;
+    justify-content: space-around;
+    padding: 10px 12px;
+    border-radius: 0;
+  }
+  .buttonContainers button {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .videoWrapper {
+    max-height: 32vh;
+  }
+  .conferenceView:has(.videoWrapper:nth-child(n+3)) .videoWrapper {
+    flex: 1 1 100%;
+    max-width: 100%;
+    max-height: 28vh;
+  }
+  .buttonContainers button {
+    width: 34px;
+    height: 34px;
+  }
+}

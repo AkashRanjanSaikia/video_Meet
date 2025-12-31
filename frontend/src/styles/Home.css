@@ -162,7 +162,6 @@ input:focus {
   border-color: #11defe;
   box-shadow: 0 0 0 3px rgba(17, 222, 254, 0.2);
 }
-
 /* Buttons */
 .action-btn {
   width: 100%;
@@ -204,5 +203,39 @@ input:focus {
 }
 .back-btn:hover {
   color: #11defe
+}
+
+@media (max-width: 768px) {
+  .join-container {
+    padding: 1.25rem;
+  }
+  .join-card {
+    max-width: 95%;
+    padding: 1.5rem;
+  }
+  .mode-toggle {
+    flex-direction: column;
+  }
+  .toggle-btn {
+    padding: 12px;
+  }
+  .input-with-copy {
+    margin-bottom: 0.75rem;
+  }
+  .join-title {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .join-card {
+    padding: 1rem;
+  }
+  .toggle-btn {
+    font-size: 0.9rem;
+  }
+  .join-title {
+    font-size: 1.6rem;
+  }
 }
 

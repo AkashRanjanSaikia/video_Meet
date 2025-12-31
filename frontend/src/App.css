@@ -584,3 +584,74 @@ input:focus {
   color: #11defe
 }
 
+@media (max-width: 768px) {
+  .landingPageContainer nav {
+    padding: 1rem 1.25rem;
+  }
+  .landingPageContainer nav h1 {
+    font-size: 1.5rem;
+  }
+  .navlist {
+    gap: 0.5rem;
+  }
+  .nav-btn {
+    padding: 0.6rem 0.9rem;
+    font-size: 0.85rem;
+  }
+  .landingMainContainer {
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 0 1.25rem;
+    min-height: auto;
+  }
+  .hero-content {
+    max-width: 100%;
+    text-align: center;
+  }
+  .hero-title {
+    font-size: 2.2rem;
+  }
+  .hero-subtitle {
+    font-size: 0.95rem;
+  }
+  .cta-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .cta-button {
+    width: 100%;
+    padding: 0.9rem 1.2rem;
+  }
+  .join-container {
+    padding: 1.25rem;
+  }
+  .join-card {
+    max-width: 95%;
+    padding: 1.5rem;
+  }
+  .auth-wrapper {
+    max-width: 95%;
+  }
+  .auth-card {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 1.8rem;
+  }
+  .landingPageContainer nav h1 {
+    font-size: 1.25rem;
+  }
+  .nav-btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
+  .join-card {
+    padding: 1rem;
+  }
+  .auth-card {
+    padding: 1rem;
+  }
+}
