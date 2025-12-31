@@ -1,4 +1,5 @@
 .container {
+  
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -7,7 +8,7 @@
   font-family: 'Poppins', sans-serif;
 }
 .dark{
-  background: linear-gradient(180deg, hsl(220 25% 12%) 0%, hsl(220 25% 10%) 100%);
+  background-color: #01111c;
   height: 100vh;
 }
 
@@ -72,7 +73,7 @@
 
 .localVideoWrapper {
   position: absolute;
-  bottom: 80px;
+  bottom: 10px;
   right: 20px;
   width: 240px;
   height: 180px;
@@ -88,35 +89,58 @@
   background-color: black;
 }
 
+/* Controls bar: glassmorphism + subtle glow */
 .buttonContainers {
   position: absolute;
-  bottom: 20px;
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 15px;
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 10px 20px;
-  border-radius: 50px;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(26, 35, 52, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 12px 24px;
+  border-radius: 999px;
   z-index: 20;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
+/* Icon buttons: larger, softer, glowing on hover */
 .buttonContainers button {
-  background-color: #424242;
-  color: white;
+  background: rgba(255, 255, 255, 0.08);
+  color: #e0e0e0;
+  border: none;
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: all 0.2s ease;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .buttonContainers button:hover {
-  background-color: #616161;
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
+/* Hang-up button special styling */
+.buttonContainers button.danger {
+  background: rgba(244, 67, 54, 0.85);
+}
+
+.buttonContainers button.danger:hover {
+  background: rgba(239, 83, 80, 0.95);
+}
+
+/* Conference grid: center-align & dynamic sizing */
 .conferenceView {
   display: flex;
   flex-wrap: wrap;
@@ -124,12 +148,11 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  height: 87vh; /* stays fixed */
+  padding-bottom: 80px; /* Space for controls */
+  height: 100vh; /* Full height */
   width: 100%;
-  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
   box-sizing: border-box;
-  overflow-y: auto; /* scroll instead of overflow */
-  overflow-x: hidden;
+  overflow: hidden; /* Prevent scrolling */
 }
 
 /* Video box styling */
@@ -141,16 +164,43 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   aspect-ratio: 16 / 9;
-  flex: 0 1 45%; /* prevents overexpanding */
-  max-width: 45%;
+  flex: 1 1 300px;
+  max-width: 800px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  max-height: calc(87vh / 2 - 1rem); /* ensures 2 rows fit nicely */
+  max-height: 80vh;
 }
 
-/* Auto layout for 3+ videos */
-.conferenceView:has(.videoWrapper:nth-child(3)) .videoWrapper {
-  flex: 0 1 45%;
+/* 1 Video: Full size, centered */
+.conferenceView:has(.videoWrapper:nth-child(1):nth-last-child(1)) .videoWrapper {
+    max-width: 60vw;
+    max-height: 60vh;
+}
+
+/* 2 Videos: Split side-by-side */
+.conferenceView:has(.videoWrapper:nth-child(2):nth-last-child(1)) .videoWrapper {
+    max-width: 48%;
+    max-height: 70vh;
+}
+
+/* 3-4 Videos: 2x2 Grid */
+.conferenceView:has(.videoWrapper:nth-child(n+3)) .videoWrapper {
+  flex: 1 1 45%;
   max-width: 45%;
+  max-height: 42vh;
+}
+
+/* 5-6 Videos: 3x2 Grid */
+.conferenceView:has(.videoWrapper:nth-child(n+5)) .videoWrapper {
+  flex: 1 1 30%;
+  max-width: 32%;
+  max-height: 35vh;
+}
+
+/* 7+ Videos: Auto Grid */
+.conferenceView:has(.videoWrapper:nth-child(n+7)) .videoWrapper {
+  flex: 1 1 22%;
+  max-width: 24%;
+  max-height: 25vh;
 }
 
 /* Small screens */
@@ -193,14 +243,69 @@
   position: absolute;
   top: 20px;
   right: 20px;
-  width: 300px;
-  height: 400px;
+  width: 320px;
+  height: 80vh; /* Increased height */
   background-color: white;
-  border-radius: 10px;
+  border-radius: 12px;
   z-index: 30;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
+  animation: slideIn 0.3s ease-out; /* Smooth toggle animation */
+  overflow: hidden;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.chatContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 15px;
+}
+
+.chatContainer h1 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+
+.chatingDisplay {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-right: 5px;
+}
+
+/* Scrollbar styling for chat */
+.chatingDisplay::-webkit-scrollbar {
+    width: 6px;
+}
+.chatingDisplay::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 4px;
+}
+
+.chatingArea {
+    display: flex;
+    gap: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
 }
 
 .chatContainer {
