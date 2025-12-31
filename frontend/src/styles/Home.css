@@ -102,7 +102,7 @@
 }
 .toggle-btn {
   flex: 1;
-  background: transparent;
+  background: #131922;
   border: none;
   border-radius: 8px;
   padding: 10px;
@@ -210,7 +210,7 @@ input:focus {
     padding: 1.25rem;
   }
   .join-card {
-    max-width: 95%;
+    max-width: 75%;
     padding: 1.5rem;
   }
   .mode-toggle {
@@ -222,9 +222,6 @@ input:focus {
   .input-with-copy {
     margin-bottom: 0.75rem;
   }
-  .join-title {
-    font-size: 2rem;
-  }
 }
 
 @media (max-width: 480px) {
@@ -234,7 +231,5 @@ input:focus {
   .toggle-btn {
     font-size: 0.9rem;
   }
-  .join-title {
-    font-size: 1.6rem;
-  }
+  
 }

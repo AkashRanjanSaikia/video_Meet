@@ -108,19 +108,36 @@
   box-shadow: 0 0 0 3px rgba(17, 222, 254, 0.2);
 }
 
-.password-input-container{
-  display: flex;
-  align-items: center;
+.password-input-container {
+  position: relative;
+  width: 100%;
 }
 
-.password-toggle-btn{
+.password-input-container .input-field {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
   background: none;
   border: none;
   color: #9ca3af;
   cursor: pointer;
-  font-weight: 500;
-  margin: 0.5rem;
-  margin-top: 0.40rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  margin: 0;
+  transition: color 0.2s ease;
+  z-index: 5;
+}
+
+.password-toggle-btn:hover {
+  color: #11defe;
 }
 
 /* Button */
@@ -166,18 +183,29 @@
   text-decoration: underline;
 }
 
+.join-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #11defe, #0db5d0);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.join-title .highlight{
+  -webkit-text-fill-color: #ffffff;
+  color: #ffffff;
+}
 
 @media (max-width: 768px) {
   .auth-wrapper {
-    max-width: 95%;
-  }
-  .auth-card {
-    padding: 1.25rem;
+    width: 75%;
   }
 }
 
 @media (max-width: 480px) {
-  .auth-card {
-    padding: 1rem;
+  .input-field {
+    padding: 0.3rem 0.4rem;
+    font-size: 0.9rem;
   }
+  
 }
