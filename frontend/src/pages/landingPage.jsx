@@ -1,4 +1,5 @@
-import '../App.css';
+// import '../App.css';
+import '../styles/landingPage.css';
 import { useNavigate } from 'react-router-dom';
 import { Video } from "lucide-react";
 

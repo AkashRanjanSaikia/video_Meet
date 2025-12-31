@@ -166,3 +166,18 @@
   text-decoration: underline;
 }
 
+
+@media (max-width: 768px) {
+  .auth-wrapper {
+    max-width: 95%;
+  }
+  .auth-card {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 1rem;
+  }
+}
