@@ -1,21 +1,30 @@
-.container{
+.container {
   width: 100vw;
   min-height: 100vh;
-  background: linear-gradient(180deg, hsl(220 25% 12%) 0%, hsl(220 25% 10%) 100%);
+  background: linear-gradient(
+    180deg,
+    hsl(220 25% 12%) 0%,
+    hsl(220 25% 10%) 100%
+  );
   color: white;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 /* Landing Page Styles */
 .landingPageContainer {
   width: 100vw;
   min-height: 100vh;
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%), url('/4.png');
+  background: linear-gradient(
+      180deg,
+      rgba(15, 23, 42, 0.8) 0%,
+      rgba(15, 23, 42, 0.9) 100%
+    ),
+    url("/4.png");
   background-size: cover;
   background-position: 90% center;
   background-repeat: no-repeat;
   color: white;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 /* navBar css */
@@ -25,9 +34,9 @@
   font-weight: 800;
 }
 .navlist {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
 }
 .nav-btn {
   padding: 0.7rem 1.2rem;
@@ -126,7 +135,7 @@
 .cta-button.primary:hover {
   background: linear-gradient(135deg, #0db5d0 0%, #11defe 100%);
   transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(17, 222, 254, 0.30);
+  box-shadow: 0 4px 12px rgba(17, 222, 254, 0.3);
 }
 .cta-button.secondary {
   background: rgba(255, 255, 255, 0.05);
@@ -156,40 +165,39 @@
 
 /* Navigation */
 .landingPageContainer nav {
-    padding: 1.5rem 3rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    transition: all 0.3s ease;
+  padding: 1.5rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: all 0.3s ease;
 }
 .landingPageContainer nav.scrolled {
-    background-color: rgba(0, 0, 0, 0.9);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.9);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 .landingPageContainer nav h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    letter-spacing: -0.5px;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
 }
 .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.6rem 1.2rem;
-    background: rgba(17, 222, 254, 0.1);
-    color: #11defe;
-    border: 0.5px solid rgba(17, 222, 254, 0.3);
-    border-radius: 50px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    backdrop-filter: blur(4px);
-    transition: all 0.3s ease;
-    margin-bottom: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  background: rgba(17, 222, 254, 0.1);
+  color: #11defe;
+  border: 0.5px solid rgba(17, 222, 254, 0.3);
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+  margin-bottom: 0.5rem;
 }
-
 
 @media (max-width: 768px) {
   .landingPageContainer nav {
@@ -206,10 +214,10 @@
     font-size: 0.85rem;
   }
   .landingMainContainer {
-    flex-direction: column;
-    gap: 1.25rem;
+    display: flex;
+    gap: 1.5rem;
     padding: 0 1.25rem;
-    min-height: auto;
+    justify-content: center;
   }
   .hero-content {
     max-width: 100%;
@@ -223,23 +231,69 @@
   }
   .cta-container {
     flex-direction: column;
-    align-items: stretch;
+    align-items: center;
   }
   .cta-button {
-    width: 100%;
+    width: 50%;
     padding: 0.9rem 1.2rem;
+  }
+  .features-preview {
+    gap: 1rem;
+    justify-content: center;
+    font-size: 0.9rem;
   }
 }
 
 @media (max-width: 480px) {
-  .hero-title {
-    font-size: 1.8rem;
+  .landingPageContainer nav {
+    padding: 1rem 1.25rem;
   }
   .landingPageContainer nav h1 {
     font-size: 1.25rem;
   }
+  .navlist {
+    gap: 0.5rem;
+  }
   .nav-btn {
     padding: 0.5rem 0.75rem;
     font-size: 0.8rem;
+  }
+  .guest-btn {
+    display: none;
+  }
+  .login-btn {
+    display: block;
+  }
+  .landingMainContainer {
+    align-items: normal;
+    margin-top: 20%;
+  }
+  .hero-badge {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.8rem;
+    margin-bottom: 0.8rem;
+  }
+  .hero-content {
+    max-width: 100%;
+    text-align: center;
+  }
+  .hero-title {
+    font-size: 2rem;
+  }
+  .hero-subtitle {
+    font-size: 0.95rem;
+  }
+  .cta-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  .cta-button {
+    width: 50%;
+    padding: 0.9rem 1.2rem;
+  }
+  .features-preview {
+    gap: 1rem;
+    justify-content: center;
+    font-size: 0.7rem;
   }
 }
