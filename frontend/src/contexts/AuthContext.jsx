@@ -1,7 +1,8 @@
 import axios from 'axios';
-import { Children, createContext, useContext, useState } from "react";
+import { Children, createContext, useContext, useState, useEffect } from "react";
 import httpsStatus from 'http-status';
 import { useNavigate } from 'react-router-dom';
+
 
 export const AuthContext = createContext({});
 
@@ -12,7 +13,45 @@ const client = axios.create({
 export const AuthProvider = ({ children }) => {
     const authContext = useContext(AuthContext);
     const [userData, setUserData] = useState(authContext);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const router = useNavigate();
+
+    const token = localStorage.getItem("token");
+
+    useEffect(() => {
+        const verifyToken = async () => {
+            if (!token) {
+                setIsAuthenticated(false);
+                return;
+            }
+
+            try {
+                const isvalid = await client.get("/isValid", {
+                    params: { token },
+                });
+                
+                if (isvalid.data.isValid) {
+                    setIsAuthenticated(true);
+                }
+            } catch {
+                logout();
+            }
+        };
+
+        verifyToken();
+    }, [token]);
+
+
+
+    const logout = () => {
+        console.log("logout");
+        localStorage.removeItem("token");
+        localStorage.removeItem("userName");
+        setIsAuthenticated(false);
+        setUserData(null);
+        router("/");
+    };
+
     const handleRegister = async (name, username, password) => {
         try {
             let request = await client.post("/register", {
@@ -78,7 +117,7 @@ export const AuthProvider = ({ children }) => {
 
 
     const data = {
-        userData, setUserData, handleRegister, handleLogin, addToUserHistory, getHistoryOfUser
+        userData, setUserData, handleRegister, handleLogin, addToUserHistory, getHistoryOfUser, isAuthenticated , logout
     }
 
     return (

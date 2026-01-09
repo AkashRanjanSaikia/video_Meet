@@ -2,23 +2,42 @@
 import '../styles/landingPage.css';
 import { useNavigate } from 'react-router-dom';
 import { Video } from "lucide-react";
+import { AuthContext } from "../contexts/AuthContext";
+import { useContext } from "react";
 
 function LandingPage() {
+    const { isAuthenticated, logout } = useContext(AuthContext);
     const router = useNavigate();
+    
+
     return (
         <div className="landingPageContainer">
             <nav >
                 <div>
                     <h1><span className="logo-highlight">Video</span>Meet</h1>
                 </div>
-                <div className='navlist'>
-                    <button className="nav-btn guest-btn" onClick={() => { router("/home") }}>
+                <div className="navlist">
+                    <button
+                        className="nav-btn guest-btn"
+                        onClick={() => router("/home")}
+                    >
                         <i className="fas fa-user-friends"></i> Join as Guest
                     </button>
-                    <button className="nav-btn login-btn" onClick={() => { router("/auth") }}>
-                        <i className="fas fa-sign-in-alt"></i> Login
-                    </button>
+
+                    {isAuthenticated ? (
+                        <button className="nav-btn auth-btn" onClick={logout}>
+                            Logout
+                        </button>
+                    ) : (
+                        <button
+                            className="nav-btn auth-btn"
+                            onClick={() => router("/auth")}
+                        >
+                            Login
+                        </button>
+                    )}
                 </div>
+
             </nav>
 
             <div className="landingMainContainer">
@@ -32,7 +51,7 @@ function LandingPage() {
                     </h1>
                     <p className="hero-subtitle">Crystal-clear HD video, seamless screen sharing, and enterprise-grade security for remote collaboration that feels natural.</p>
                     <div className="cta-container">
-                        <button className="cta-button primary" onClick={() => { router("/auth") }}>
+                        <button className="cta-button primary" onClick={() => { isAuthenticated? router("/home") : router("/auth") }}>
                             Get Started
                         </button>
                         <button className="cta-button secondary" onClick={() => { router("/home") }}>
@@ -54,7 +73,7 @@ function LandingPage() {
                         </div>
                     </div>
                 </div>
-                
+
             </div>
         </div>
     );

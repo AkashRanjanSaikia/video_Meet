@@ -1,4 +1,4 @@
-import bcrypt , {hash} from "bcrypt";
+import bcrypt from "bcrypt";
 import crypto from "crypto";
 import httpStatus from "http-status";
 import User from "../models/user.model.js";
@@ -95,4 +95,20 @@ const addToHistory = async (req, res) => {
 }
 
 
-export {login , register ,getUserHistory ,addToHistory} ;
+const isValid = async (req, res) => {
+    const { token } = req.query;
+    try {
+        const user = await User.findOne({ token: token });
+        if (user) {
+            res.json({ isValid: true });
+        } else {
+            res.json({ isValid: false });
+        }
+        console.log(user);
+    } catch (e) {
+        res.json({ message: `Something went wrong ${e}` })
+    }
+}
+
+
+export {login , register ,getUserHistory ,addToHistory , isValid } ;

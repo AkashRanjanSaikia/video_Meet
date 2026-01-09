@@ -59,7 +59,7 @@
   background: rgba(17, 222, 254, 0.15);
   border-color: rgba(17, 222, 254, 0.6);
 }
-.login-btn {
+.auth-btn {
   background: linear-gradient(135deg, #11defe 0%, #0db5d0 100%);
   color: white;
   box-shadow: 0 6px 20px rgba(17, 222, 254, 0.35);
@@ -73,12 +73,12 @@
   position: relative;
   overflow: hidden;
 }
-.login-btn:hover {
+.auth-btn:hover {
   background: linear-gradient(135deg, #0db5d0 0%, #11defe 100%);
   transform: translateY(-3px);
   box-shadow: 0 8px 24px rgba(17, 222, 254, 0.45);
 }
-.login-btn:active {
+.auth-btn:active {
   transform: translateY(0);
   box-shadow: 0 4px 12px rgba(17, 222, 254, 0.3);
 }
