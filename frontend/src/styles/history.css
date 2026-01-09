@@ -7,7 +7,7 @@
 
 /* App Bar */
 .history-appbar {
-  position: sticky;
+  /* position: sticky; */
   top: 0;
   z-index: 10;
   background: rgba(17, 25, 40, 0.95);
@@ -23,13 +23,17 @@
   align-items: center;
   justify-content: space-between;
 }
+.history-appbar-container img{
+  width: 30px;
+  height: 30px;
+}
 
 .history-appbar-title {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   font-weight: 700;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
 }
 
 .history-appbar-gradient {

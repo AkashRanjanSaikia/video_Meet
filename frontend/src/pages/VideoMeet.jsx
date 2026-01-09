@@ -104,7 +104,7 @@ function VideoMeetComponent() {
             }
         }
     };
-    
+
     let getUserMediaSuccess = (stream) => {
         // 1. Stop old tracks
         if (window.localStream) {
@@ -411,7 +411,7 @@ function VideoMeetComponent() {
     }
 
 
-    
+
     let handleChat = () => {
         setModal(!showModal)
     }
@@ -419,18 +419,24 @@ function VideoMeetComponent() {
         const displayUsername = username || (userData && typeof userData === 'string' ? userData : 'User');
         socketRef.current.emit("chat-message", message, displayUsername);
         setMessage("");
+
     }
     const addMessage = (data, sender, socketIdSender) => {
+        const isOwnMessage = socketIdSender === socketIdRef.current;
+
         setMessages((prevMessages) => [
             ...prevMessages,
-            { sender: sender, data: data }
+            {
+                sender: isOwnMessage ? "You" : sender,
+                data: data
+            }
+        ]);
 
-        ])
-        if (socketIdSender !== socketIdRef.current) {
-            setNewMessages((prevMessages) => prevMessages + 1)
-
+        if (!isOwnMessage) {
+            setNewMessages((prevCount) => prevCount + 1);
         }
     };
+
 
 
     let getMedia = () => {
@@ -524,7 +530,7 @@ function VideoMeetComponent() {
                                 </div>
                                 <div className={styles.chatingArea}>
 
-                                    <TextField id="outlined-basic" onChange={(e) => { setMessage(e.target.value) }} label="Enter Your chat" />
+                                    <TextField id="outlined-basic" value={message} onChange={(e) => { setMessage(e.target.value) }} label="Enter Your chat" />
                                     <Button variant='contained' onClick={sendMessage}>Send</Button>
                                 </div>
                             </div>
@@ -546,7 +552,7 @@ function VideoMeetComponent() {
                         <IconButton onClick={handleAudio}>
                             {(audio === true) ? <MicIcon /> : <MicOffIcon />}
                         </IconButton>
-                        <IconButton onClick={handleEndCall}>
+                        <IconButton onClick={handleEndCall} className={styles.danger}>
                             <CallEndIcon />
                         </IconButton>
                         {screenAvailable === true ?

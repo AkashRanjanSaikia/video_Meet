@@ -244,7 +244,7 @@
   top: 20px;
   right: 20px;
   width: 320px;
-  height: 80vh; /* Increased height */
+  height: 96vh; /* Increased height */
   background-color: white;
   border-radius: 12px;
   z-index: 30;
@@ -332,13 +332,6 @@
   border-radius: 8px;
 }
 
-.chatingDisplay > div {
-  margin-bottom: 10px;
-  padding: 8px;
-  border-radius: 8px;
-  background-color: #e6f2ff;
-}
-
 .chatingDisplay > div p:first-child {
   font-weight: bold;
   margin: 0 0 5px 0;
@@ -348,6 +341,10 @@
 .chatingDisplay > div p:last-child {
   margin: 0;
   word-break: break-word;
+  background-color: #e6f2ff;
+  margin-bottom: 10px;
+  padding: 8px;
+  border-radius: 8px;
 }
 
 .chatingArea {

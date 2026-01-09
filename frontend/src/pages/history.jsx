@@ -7,7 +7,7 @@ function CalendarIcon() {
     // Simple calendar SVG icon
     return (
         <span className="history-icon" role="img" aria-label="calendar" style={{ marginRight: 6, verticalAlign: 'middle' }}>
-            <svg width="18" height="18" fill="#9ca3af" viewBox="0 0 24 24"><rect width="18" height="16" x="3" y="5" rx="2" fill="none" stroke="#9ca3af" strokeWidth="2"/><line x1="3" y1="9" x2="21" y2="9" stroke="#9ca3af" strokeWidth="2"/><rect width="2" height="2" x="7" y="13" fill="#11defe"/><rect width="2" height="2" x="11" y="13" fill="#11defe"/><rect width="2" height="2" x="15" y="13" fill="#11defe"/></svg>
+            <svg width="18" height="18" fill="#9ca3af" viewBox="0 0 24 24"><rect width="18" height="16" x="3" y="5" rx="2" fill="none" stroke="#9ca3af" strokeWidth="2" /><line x1="3" y1="9" x2="21" y2="9" stroke="#9ca3af" strokeWidth="2" /><rect width="2" height="2" x="7" y="13" fill="#11defe" /><rect width="2" height="2" x="11" y="13" fill="#11defe" /><rect width="2" height="2" x="15" y="13" fill="#11defe" /></svg>
         </span>
     );
 }
@@ -28,28 +28,17 @@ function MeetingRoomIcon() {
     // Simple meeting room SVG icon
     return (
         <span className="history-icon" role="img" aria-label="room" style={{ marginRight: 12, verticalAlign: 'middle' }}>
-            <svg height="30px" width="30px" viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="13" height="13" rx="2" fill="#11defe"/><rect x="16" y="9" width="5" height="9" rx="1" fill="#82f1ff"/><rect x="7" y="3" width="6" height="4" rx="1" fill="#11defe"/></svg>
+            <svg height="30px" width="30px" viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="13" height="13" rx="2" fill="#11defe" /><rect x="16" y="9" width="5" height="9" rx="1" fill="#82f1ff" /><rect x="7" y="3" width="6" height="4" rx="1" fill="#11defe" /></svg>
         </span>
     );
 }
 
-function VideoCallIcon() {
-    // App bar icon (video camera)
-    return (
-        <span className="history-appicon" role="img" aria-label="camera" style={{ marginRight: 8, verticalAlign: 'middle' }}>
-            <svg width="30" height="30" fill="none" viewBox="0 0 24 24">
-                <rect x="3" y="7" width="13" height="10" rx="2" stroke="#fff" strokeWidth="2"/>
-                <path d="M19 7v10l4-2V9z" fill="#11defe" />
-            </svg>
-        </span>
-    );
-}
 
 function ArrowBackIcon() {
     return (
         <span className="history-icon" role="img" aria-label="back" style={{ marginRight: 8, verticalAlign: 'middle' }}>
             <svg width="22" height="22" fill="none" viewBox="0 0 24 24">
-                <path d="M15 19l-7-7 7-7" stroke="#11defe" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M15 19l-7-7 7-7" stroke="#11defe" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
         </span>
     );
@@ -106,8 +95,12 @@ export default function History() {
             <header className="history-appbar">
                 <div className="history-appbar-container">
                     <div className="history-appbar-title">
-                        <VideoCallIcon />
-                        <span className="history-appbar-gradient">VideoMeet</span>
+                        <img src="/video_icon.svg" alt="icon" />
+                        <span>
+                            <span className="history-appbar-gradient">
+                                Video</span>Meet
+                        </span>
+
                     </div>
                     <button className="history-back-btn" onClick={goHome}>
                         <ArrowBackIcon />
@@ -143,12 +136,16 @@ export default function History() {
                                             </div>
                                         </div>
                                     </div>
-                                    <button
-                                        className="history-join-btn"
-                                        onClick={() => joinMeeting(meeting.meetingCode)}
-                                    >
-                                        Join Again
-                                    </button>
+                                    {
+                                        meeting.status === "ongoing" && (
+                                            <button
+                                                className="history-join-btn"
+                                                onClick={() => joinMeeting(meeting.meetingCode)}
+                                            >
+                                                Join Again
+                                            </button>
+                                        )
+                                    }
                                 </div>
                             </div>
                         ))}
