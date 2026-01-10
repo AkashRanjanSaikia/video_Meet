@@ -231,5 +231,10 @@ input:focus {
   .toggle-btn {
     font-size: 0.9rem;
   }
-  
+  .join-title {
+    font-size: 2rem;
+  }
+  .join-subtitle {
+    font-size: 0.8rem;
+  }
 }

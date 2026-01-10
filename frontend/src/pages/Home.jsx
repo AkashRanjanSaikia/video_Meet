@@ -59,7 +59,7 @@ const Home = () => {
         <div className="join-container">
           <div className="join-card">
             <div className="join-header">
-              <h1 className="join-title">Video<span className="highlight" >Meet</span></h1>
+              <h1 className="join-title">Video<span className="highlight">Meet</span></h1>
               <p className="join-subtitle">Start or join your video meeting</p>
             </div>
 

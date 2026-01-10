@@ -57,15 +57,13 @@ function VideoMeetComponent() {
     const [userNamesMap, setUserNamesMap] = useState({});
 
     useEffect(() => {
-            getPermissions();
-    }, [])
-    
-
-    useEffect(() => {
-        
         if (userData && typeof userData === 'string') {
             setUsername(userData);
         }
+        getPermissions();
+    }, [])
+
+    useEffect(() => {
         if (video !== undefined && audio !== undefined) {
             getUserMedia();
             console.log("video : ", video, "audio : ", audio);
@@ -78,7 +76,6 @@ function VideoMeetComponent() {
         }
     }, [screen])
 
-    // Ensure video element is synced with stream when transitioning from lobby to meeting
     useEffect(() => {
         if (!askForUsername && localVideoref.current && window.localStream) {
             // When entering meeting, ensure video element has the current stream
@@ -88,6 +85,7 @@ function VideoMeetComponent() {
             }
         }
     }, [askForUsername])
+
 
     const getPermissions = async () => {
         console.log("getPermissions : ", video, audio);
@@ -149,7 +147,7 @@ function VideoMeetComponent() {
 
     const getUserMedia = () => {
         console.log("getUserMedia : ", video, audio);
-        
+
         // If user wants video or audio, request it (even if permissions weren't granted initially)
         if (video || audio) {
             navigator.mediaDevices.getUserMedia({ video: video, audio: audio })
@@ -163,7 +161,7 @@ function VideoMeetComponent() {
                         setAudioAvailable(true);
                         setAudioPermissionDenied(false);
                     }
-                    
+
                     // Add black/silence tracks if video/audio is disabled
                     if (!video) {
                         let blackTrack = black();
@@ -178,7 +176,7 @@ function VideoMeetComponent() {
                 })
                 .catch((e) => {
                     console.log("Error getting user media:", e);
-                    
+
                     // Handle permission errors
                     if (e.name === 'NotAllowedError') {
                         if (video) {
@@ -207,7 +205,7 @@ function VideoMeetComponent() {
                         setSnackbarMessage("No camera or microphone found on this device.");
                         setSnackbarOpen(true);
                     }
-                    
+
                     // If permission denied or error, use black/silence
                     try {
                         let tracks = localVideoref.current?.srcObject?.getTracks();
@@ -241,7 +239,6 @@ function VideoMeetComponent() {
         }
     }
 
-
     const getUserMediaSuccess = (stream) => {
         // 1. Stop old tracks
         if (window.localStream) {
@@ -250,7 +247,7 @@ function VideoMeetComponent() {
 
         // 2. Save & show local stream
         window.localStream = stream;
-        
+
         // Ensure video ref is updated (works for both preview and meeting video)
         if (localVideoref.current) {
             localVideoref.current.srcObject = stream;
@@ -283,8 +280,6 @@ function VideoMeetComponent() {
         });
     };
 
-
-
     const handleTrackEnded = () => {
         setVideo(false);
         setAudio(false);
@@ -295,7 +290,7 @@ function VideoMeetComponent() {
         ]);
 
         window.localStream = blackSilence;
-        
+
         // Update video ref with black silence stream
         if (localVideoref.current) {
             localVideoref.current.srcObject = blackSilence;
@@ -310,7 +305,6 @@ function VideoMeetComponent() {
             });
         }
     };
-
 
     const connectToSocketServer = () => {
         socketRef.current = io.connect(server_url, { secure: false })
@@ -463,7 +457,6 @@ function VideoMeetComponent() {
         }
     }
 
-
     const handleVideo = () => {
         // Only prevent enabling if permission was denied and user is trying to turn it on
         if (videoPermissionDenied && !video) {
@@ -489,7 +482,7 @@ function VideoMeetComponent() {
             console.log(e);
         }
         window.localStream = stream;
-        
+
         // Ensure video ref is updated (works for both preview and meeting video)
         if (localVideoref.current) {
             localVideoref.current.srcObject = stream;
@@ -521,7 +514,7 @@ function VideoMeetComponent() {
 
             let blackSilence = (...args) => new MediaStream([black(...args), silence()])
             window.localStream = blackSilence()
-            
+
             // Update video ref with black silence stream
             if (localVideoref.current) {
                 localVideoref.current.srcObject = window.localStream;
@@ -621,15 +614,15 @@ function VideoMeetComponent() {
                     <div className={styles.previewContainer}>
                         <video className={styles.videoPreview} ref={localVideoref} autoPlay muted></video>
                         <div className={styles.controls}>
-                            <IconButton 
-                                onClick={handleVideo} 
+                            <IconButton
+                                onClick={handleVideo}
                                 className={!video ? styles.videoOff : ''}
                                 title={videoPermissionDenied && !video ? "Camera permission denied" : ""}
                             >
                                 {(video === true) ? <VideocamIcon /> : <VideocamOffIcon />}
                             </IconButton>
-                            <IconButton 
-                                onClick={handleAudio} 
+                            <IconButton
+                                onClick={handleAudio}
                                 className={!audio ? styles.videoOff : ''}
                                 title={audioPermissionDenied && !audio ? "Microphone permission denied" : ""}
                             >
@@ -693,13 +686,13 @@ function VideoMeetComponent() {
                     </div>
 
                     <div className={styles.buttonContainers}>
-                        <IconButton 
+                        <IconButton
                             onClick={handleVideo}
                             title={videoPermissionDenied && !video ? "Camera permission denied" : ""}
                         >
                             {(video === true) ? <VideocamIcon /> : <VideocamOffIcon />}
                         </IconButton>
-                        <IconButton 
+                        <IconButton
                             onClick={handleAudio}
                             title={audioPermissionDenied && !audio ? "Microphone permission denied" : ""}
                         >
@@ -753,10 +746,10 @@ function VideoMeetComponent() {
                 onClose={() => setSnackbarOpen(false)}
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             >
-                <Alert 
-                    onClose={() => setSnackbarOpen(false)} 
-                    severity="warning" 
-                    sx={{ 
+                <Alert
+                    onClose={() => setSnackbarOpen(false)}
+                    severity="warning"
+                    sx={{
                         width: '100%',
                         backgroundColor: 'rgba(26, 35, 52, 0.95)',
                         color: '#e0e0e0',
