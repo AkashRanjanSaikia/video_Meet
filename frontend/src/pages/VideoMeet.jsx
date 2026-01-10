@@ -465,7 +465,8 @@ function VideoMeetComponent() {
 
 
     const handleVideo = () => {
-        if (videoPermissionDenied) {
+        // Only prevent enabling if permission was denied and user is trying to turn it on
+        if (videoPermissionDenied && !video) {
             setSnackbarMessage("Camera permission was denied. Please enable camera access in your browser settings.");
             setSnackbarOpen(true);
             return;
@@ -473,7 +474,8 @@ function VideoMeetComponent() {
         setVideo(!video);
     }
     const handleAudio = () => {
-        if (audioPermissionDenied) {
+        // Only prevent enabling if permission was denied and user is trying to turn it on
+        if (audioPermissionDenied && !audio) {
             setSnackbarMessage("Microphone permission was denied. Please enable microphone access in your browser settings.");
             setSnackbarOpen(true);
             return;
@@ -622,16 +624,14 @@ function VideoMeetComponent() {
                             <IconButton 
                                 onClick={handleVideo} 
                                 className={!video ? styles.videoOff : ''}
-                                disabled={videoPermissionDenied}
-                                title={videoPermissionDenied ? "Camera permission denied" : ""}
+                                title={videoPermissionDenied && !video ? "Camera permission denied" : ""}
                             >
                                 {(video === true) ? <VideocamIcon /> : <VideocamOffIcon />}
                             </IconButton>
                             <IconButton 
                                 onClick={handleAudio} 
                                 className={!audio ? styles.videoOff : ''}
-                                disabled={audioPermissionDenied}
-                                title={audioPermissionDenied ? "Microphone permission denied" : ""}
+                                title={audioPermissionDenied && !audio ? "Microphone permission denied" : ""}
                             >
                                 {(audio === true) ? <MicIcon /> : <MicOffIcon />}
                             </IconButton>
@@ -695,15 +695,13 @@ function VideoMeetComponent() {
                     <div className={styles.buttonContainers}>
                         <IconButton 
                             onClick={handleVideo}
-                            disabled={videoPermissionDenied}
-                            title={videoPermissionDenied ? "Camera permission denied" : ""}
+                            title={videoPermissionDenied && !video ? "Camera permission denied" : ""}
                         >
                             {(video === true) ? <VideocamIcon /> : <VideocamOffIcon />}
                         </IconButton>
                         <IconButton 
                             onClick={handleAudio}
-                            disabled={audioPermissionDenied}
-                            title={audioPermissionDenied ? "Microphone permission denied" : ""}
+                            title={audioPermissionDenied && !audio ? "Microphone permission denied" : ""}
                         >
                             {(audio === true) ? <MicIcon /> : <MicOffIcon />}
                         </IconButton>
