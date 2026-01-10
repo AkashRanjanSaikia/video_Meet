@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useContext } from 'react'
+import { useEffect, useRef, useState, useContext, useCallback } from 'react'
 import io from "socket.io-client";
 import { useNavigate } from 'react-router-dom';
 import { IconButton, TextField, Button, Badge, Snackbar, Alert } from '@mui/material';
@@ -24,6 +24,7 @@ const peerConfigConnections = {
         { "urls": "stun:stun.l.google.com:19302" }
     ]
 }
+
 function VideoMeetComponent() {
     const routeTo = useNavigate();
     const { userData } = useContext(AuthContext);
@@ -62,6 +63,7 @@ function VideoMeetComponent() {
         }
         getPermissions();
     }, [])
+
 
     useEffect(() => {
         if (video !== undefined && audio !== undefined) {
@@ -572,7 +574,8 @@ function VideoMeetComponent() {
         setAskForUsername(false);
         getMedia();
     }
-    const handleEndCall = () => {
+
+    const handleEndCall = useCallback(() => {
         try {
             // 1. Stop local media
             if (localVideoref.current?.srcObject) {
@@ -593,20 +596,47 @@ function VideoMeetComponent() {
                 }
             }
 
-            // 3. Notify server
-            socketRef.current.emit("end-call");
+            // 3. Notify server (if socket exists)
+            if (socketRef.current && socketRef.current.connected) {
+                socketRef.current.emit("end-call");
+                socketRef.current.disconnect();
+            }
 
-            // 4. Disconnect socket
-            socketRef.current.disconnect();
-
-            // 5. Navigate away
-            routeTo("/home");
+            // 4. Navigate away (only if not already navigating)
+            if (routeTo) {
+                routeTo("/home");
+            }
 
         } catch (e) {
             console.error("Error ending call:", e);
         }
-    };
+    }, [routeTo]);
 
+    useEffect(() => {
+        const handleBeforeUnload = (e) => {
+            // Only trigger cleanup if user is actually in the meeting
+            if (!askForUsername && socketRef.current) {
+                // Call handleEndCall to clean up resources
+                // Note: Some cleanup may not complete due to browser limitations,
+                // but the server will catch the disconnect event
+                handleEndCall();
+            }
+        };
+
+        // Add event listener
+        window.addEventListener('beforeunload', handleBeforeUnload);
+
+        // Cleanup: remove event listener when component unmounts
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+            // Also call cleanup on component unmount
+            if (!askForUsername && socketRef.current) {
+                handleEndCall();
+            }
+        };
+    }, [askForUsername, handleEndCall])
+
+   
     return (
         <div>
             {askForUsername === true ?

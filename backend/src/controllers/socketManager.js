@@ -104,7 +104,11 @@ export const connectToSocket = (server) => {
             delete timeOnline[socket.id];
         };
 
+        // Handle explicit end-call event (when user clicks end call button)
         socket.on("end-call", handleDisconnect);
+
+        // Handle native disconnect event (tab close, refresh, network issues)
+        socket.on("disconnect", handleDisconnect);
     });
 
     return io;
