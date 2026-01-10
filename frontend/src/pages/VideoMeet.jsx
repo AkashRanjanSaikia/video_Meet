@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useContext } from 'react'
 import io from "socket.io-client";
 import { useNavigate } from 'react-router-dom';
-import { IconButton, TextField, Button, Badge } from '@mui/material';
+import { IconButton, TextField, Button, Badge, Snackbar, Alert } from '@mui/material';
 import styles from '../styles/VideoMeet.module.css';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import VideocamOffIcon from '@mui/icons-material/VideocamOff';
@@ -36,6 +36,10 @@ function VideoMeetComponent() {
     const [audioAvailable, setAudioAvailable] = useState(false);
     const [videoAvailable, setVideoAvailable] = useState(false);
     const [screenAvailable, setScreenAvailable] = useState(true);
+    const [videoPermissionDenied, setVideoPermissionDenied] = useState(false);
+    const [audioPermissionDenied, setAudioPermissionDenied] = useState(false);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("");
 
     const [videos, setVideos] = useState([]); //others videos
     const [video, setVideo] = useState(false); //local video
@@ -97,9 +101,11 @@ function VideoMeetComponent() {
             if (stream) {
                 if (video) {
                     setVideoAvailable(true);
+                    setVideoPermissionDenied(false);
                 }
                 if (audio) {
                     setAudioAvailable(true);
+                    setAudioPermissionDenied(false);
                 }
 
                 // Store in a global/window variable if needed for your signaling logic
@@ -113,13 +119,30 @@ function VideoMeetComponent() {
                 }
             }
         } catch (error) {
-
             console.error("Error accessing media devices:", error.name);
 
             if (error.name === 'NotAllowedError') {
-                alert("Permissions were denied. Please enable camera/mic access.");
+                if (video) {
+                    setVideoPermissionDenied(true);
+                    setVideoAvailable(false);
+                }
+                if (audio) {
+                    setAudioPermissionDenied(true);
+                    setAudioAvailable(false);
+                }
+                setSnackbarMessage("Permissions were denied. Please enable camera/mic access in your browser settings.");
+                setSnackbarOpen(true);
             } else if (error.name === 'NotFoundError') {
-                alert("No camera or microphone found on this device.");
+                if (video) {
+                    setVideoPermissionDenied(true);
+                    setVideoAvailable(false);
+                }
+                if (audio) {
+                    setAudioPermissionDenied(true);
+                    setAudioAvailable(false);
+                }
+                setSnackbarMessage("No camera or microphone found on this device.");
+                setSnackbarOpen(true);
             }
         }
     };
@@ -134,9 +157,11 @@ function VideoMeetComponent() {
                     // Update availability flags
                     if (video && stream.getVideoTracks().length > 0) {
                         setVideoAvailable(true);
+                        setVideoPermissionDenied(false);
                     }
                     if (audio && stream.getAudioTracks().length > 0) {
                         setAudioAvailable(true);
+                        setAudioPermissionDenied(false);
                     }
                     
                     // Add black/silence tracks if video/audio is disabled
@@ -153,6 +178,36 @@ function VideoMeetComponent() {
                 })
                 .catch((e) => {
                     console.log("Error getting user media:", e);
+                    
+                    // Handle permission errors
+                    if (e.name === 'NotAllowedError') {
+                        if (video) {
+                            setVideoPermissionDenied(true);
+                            setVideoAvailable(false);
+                            setVideo(false);
+                        }
+                        if (audio) {
+                            setAudioPermissionDenied(true);
+                            setAudioAvailable(false);
+                            setAudio(false);
+                        }
+                        setSnackbarMessage("Permissions were denied. Please enable camera/mic access in your browser settings.");
+                        setSnackbarOpen(true);
+                    } else if (e.name === 'NotFoundError') {
+                        if (video) {
+                            setVideoPermissionDenied(true);
+                            setVideoAvailable(false);
+                            setVideo(false);
+                        }
+                        if (audio) {
+                            setAudioPermissionDenied(true);
+                            setAudioAvailable(false);
+                            setAudio(false);
+                        }
+                        setSnackbarMessage("No camera or microphone found on this device.");
+                        setSnackbarOpen(true);
+                    }
+                    
                     // If permission denied or error, use black/silence
                     try {
                         let tracks = localVideoref.current?.srcObject?.getTracks();
@@ -410,12 +465,20 @@ function VideoMeetComponent() {
 
 
     const handleVideo = () => {
+        if (videoPermissionDenied) {
+            setSnackbarMessage("Camera permission was denied. Please enable camera access in your browser settings.");
+            setSnackbarOpen(true);
+            return;
+        }
         setVideo(!video);
-        // getUserMedia();
     }
     const handleAudio = () => {
-        setAudio(!audio)
-        // getUserMedia();
+        if (audioPermissionDenied) {
+            setSnackbarMessage("Microphone permission was denied. Please enable microphone access in your browser settings.");
+            setSnackbarOpen(true);
+            return;
+        }
+        setAudio(!audio);
     }
     const getDisplayMediaSuccess = (stream) => {
         try {
@@ -556,10 +619,20 @@ function VideoMeetComponent() {
                     <div className={styles.previewContainer}>
                         <video className={styles.videoPreview} ref={localVideoref} autoPlay muted></video>
                         <div className={styles.controls}>
-                            <IconButton onClick={handleVideo} className={!video ? styles.videoOff : ''}>
+                            <IconButton 
+                                onClick={handleVideo} 
+                                className={!video ? styles.videoOff : ''}
+                                disabled={videoPermissionDenied}
+                                title={videoPermissionDenied ? "Camera permission denied" : ""}
+                            >
                                 {(video === true) ? <VideocamIcon /> : <VideocamOffIcon />}
                             </IconButton>
-                            <IconButton onClick={handleAudio} className={!audio ? styles.videoOff : ''}>
+                            <IconButton 
+                                onClick={handleAudio} 
+                                className={!audio ? styles.videoOff : ''}
+                                disabled={audioPermissionDenied}
+                                title={audioPermissionDenied ? "Microphone permission denied" : ""}
+                            >
                                 {(audio === true) ? <MicIcon /> : <MicOffIcon />}
                             </IconButton>
                         </div>
@@ -620,10 +693,18 @@ function VideoMeetComponent() {
                     </div>
 
                     <div className={styles.buttonContainers}>
-                        <IconButton onClick={handleVideo}>
+                        <IconButton 
+                            onClick={handleVideo}
+                            disabled={videoPermissionDenied}
+                            title={videoPermissionDenied ? "Camera permission denied" : ""}
+                        >
                             {(video === true) ? <VideocamIcon /> : <VideocamOffIcon />}
                         </IconButton>
-                        <IconButton onClick={handleAudio}>
+                        <IconButton 
+                            onClick={handleAudio}
+                            disabled={audioPermissionDenied}
+                            title={audioPermissionDenied ? "Microphone permission denied" : ""}
+                        >
                             {(audio === true) ? <MicIcon /> : <MicOffIcon />}
                         </IconButton>
                         <IconButton onClick={handleEndCall} className={styles.danger}>
@@ -668,6 +749,27 @@ function VideoMeetComponent() {
 
                 </div>
             }
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={() => setSnackbarOpen(false)}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+                <Alert 
+                    onClose={() => setSnackbarOpen(false)} 
+                    severity="warning" 
+                    sx={{ 
+                        width: '100%',
+                        backgroundColor: 'rgba(26, 35, 52, 0.95)',
+                        color: '#e0e0e0',
+                        '& .MuiAlert-icon': {
+                            color: '#ff9800'
+                        }
+                    }}
+                >
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
         </div>
     )
 }
