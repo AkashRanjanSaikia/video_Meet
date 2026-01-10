@@ -18,51 +18,53 @@ import withValidMeeting from "../utils/withValidMeeting";
 
 const server_url = import.meta.env.VITE_BACKEND_URL;
 
-var connections = {};
+const connections = {};
 const peerConfigConnections = {
     "iceServers": [
         { "urls": "stun:stun.l.google.com:19302" }
     ]
 }
 function VideoMeetComponent() {
-    let routeTo = useNavigate();
+    const routeTo = useNavigate();
     const { userData } = useContext(AuthContext);
 
-    var socketRef = useRef();
-    let socketIdRef = useRef();
-    let localVideoref = useRef();
+    const socketRef = useRef();
+    const socketIdRef = useRef();
+    const localVideoref = useRef();
     const videoRef = useRef([])
 
-    let [videoAvailable, setVideoAvailable] = useState(true);
-    let [audioAvailable, setAudioAvailable] = useState(true);
-    let [screenAvailable, setScreenAvailable] = useState(true);
+    const [audioAvailable, setAudioAvailable] = useState(false);
+    const [videoAvailable, setVideoAvailable] = useState(false);
+    const [screenAvailable, setScreenAvailable] = useState(true);
 
-    let [videos, setVideos] = useState([])
-    let [video, setVideo] = useState([]);
-    let [audio, setAudio] = useState();
-    let [screen, setScreen] = useState();
-    let [showModal, setModal] = useState(false);
+    const [videos, setVideos] = useState([]); //others videos
+    const [video, setVideo] = useState(false); //local video
+    const [audio, setAudio] = useState(false); //local audio
+    const [screen, setScreen] = useState(false);    //local screen share
 
-    let [messages, setMessages] = useState([])
-    let [message, setMessage] = useState("");
-    let [newMessages, setNewMessages] = useState(0);
+    const [showModal, setModal] = useState(false);
 
-    let [askForUsername, setAskForUsername] = useState(true);
-    let [username, setUsername] = useState("");
-    let [userNamesMap, setUserNamesMap] = useState({}); // Map socketId to username
+    const [messages, setMessages] = useState([])
+    const [message, setMessage] = useState("");
+    const [newMessages, setNewMessages] = useState(0);
+
+    const [askForUsername, setAskForUsername] = useState(true);
+    const [username, setUsername] = useState("");
+    const [userNamesMap, setUserNamesMap] = useState({});
 
     useEffect(() => {
-        console.log("1st runs")
-        getPermissions();
-        if (userData && typeof userData === 'string') {         // Auto-fill username from AuthContext if available
+            getPermissions();
+    }, [])
+    
+
+    useEffect(() => {
+        
+        if (userData && typeof userData === 'string') {
             setUsername(userData);
         }
-    }, [userData])
-
-    useEffect(() => {
         if (video !== undefined && audio !== undefined) {
             getUserMedia();
-            console.log("SET STATE HAS ", video, audio);
+            console.log("video : ", video, "audio : ", audio);
         }
     }, [video, audio])
 
@@ -72,25 +74,42 @@ function VideoMeetComponent() {
         }
     }, [screen])
 
+    // Ensure video element is synced with stream when transitioning from lobby to meeting
+    useEffect(() => {
+        if (!askForUsername && localVideoref.current && window.localStream) {
+            // When entering meeting, ensure video element has the current stream
+            if (localVideoref.current.srcObject !== window.localStream) {
+                localVideoref.current.srcObject = window.localStream;
+                localVideoref.current.play().catch(e => console.log("Video play error:", e));
+            }
+        }
+    }, [askForUsername])
+
     const getPermissions = async () => {
+        console.log("getPermissions : ", video, audio);
         try {
             // 1. Request both at once (Standard WebRTC Practice)
             const stream = await navigator.mediaDevices.getUserMedia({
-                video: true,
-                audio: true
+                video: video,
+                audio: audio
             });
-
             // 2. Handle Success
             if (stream) {
-                setVideoAvailable(true);
-                setAudioAvailable(true);
+                if (video) {
+                    setVideoAvailable(true);
+                }
+                if (audio) {
+                    setAudioAvailable(true);
+                }
 
                 // Store in a global/window variable if needed for your signaling logic
                 window.localStream = stream;
 
-                // 3. Attach to Video Element
+                // 3. Attach to Video Element (preview)
                 if (localVideoref.current) {
                     localVideoref.current.srcObject = stream;
+                    // Force video to play
+                    localVideoref.current.play().catch(e => console.log("Video play error:", e));
                 }
             }
         } catch (error) {
@@ -105,7 +124,70 @@ function VideoMeetComponent() {
         }
     };
 
-    let getUserMediaSuccess = (stream) => {
+    const getUserMedia = () => {
+        console.log("getUserMedia : ", video, audio);
+        
+        // If user wants video or audio, request it (even if permissions weren't granted initially)
+        if (video || audio) {
+            navigator.mediaDevices.getUserMedia({ video: video, audio: audio })
+                .then((stream) => {
+                    // Update availability flags
+                    if (video && stream.getVideoTracks().length > 0) {
+                        setVideoAvailable(true);
+                    }
+                    if (audio && stream.getAudioTracks().length > 0) {
+                        setAudioAvailable(true);
+                    }
+                    
+                    // Add black/silence tracks if video/audio is disabled
+                    if (!video) {
+                        let blackTrack = black();
+                        blackTrack.enabled = true;
+                        stream.addTrack(blackTrack);
+                    }
+                    if (!audio) {
+                        let silenceTrack = silence();
+                        stream.addTrack(silenceTrack);
+                    }
+                    getUserMediaSuccess(stream);
+                })
+                .catch((e) => {
+                    console.log("Error getting user media:", e);
+                    // If permission denied or error, use black/silence
+                    try {
+                        let tracks = localVideoref.current?.srcObject?.getTracks();
+                        if (tracks) {
+                            tracks.forEach(track => track.stop());
+                        }
+                    } catch (err) { }
+
+                    let blackTrack = black();
+                    let silenceTrack = silence();
+                    blackTrack.enabled = true;
+
+                    let blackSilence = new MediaStream([blackTrack, silenceTrack]);
+                    getUserMediaSuccess(blackSilence);
+                });
+        } else {
+            // Both video and audio are off - use black/silence
+            try {
+                let tracks = localVideoref.current?.srcObject?.getTracks();
+                if (tracks) {
+                    tracks.forEach(track => track.stop());
+                }
+            } catch (e) { }
+
+            let blackTrack = black();
+            let silenceTrack = silence();
+            blackTrack.enabled = true;
+
+            let blackSilence = new MediaStream([blackTrack, silenceTrack]);
+            getUserMediaSuccess(blackSilence);
+        }
+    }
+
+
+    const getUserMediaSuccess = (stream) => {
         // 1. Stop old tracks
         if (window.localStream) {
             window.localStream.getTracks().forEach(track => track.stop());
@@ -113,7 +195,13 @@ function VideoMeetComponent() {
 
         // 2. Save & show local stream
         window.localStream = stream;
-        localVideoref.current.srcObject = stream;
+        
+        // Ensure video ref is updated (works for both preview and meeting video)
+        if (localVideoref.current) {
+            localVideoref.current.srcObject = stream;
+            // Force video to play
+            localVideoref.current.play().catch(e => console.log("Video play error:", e));
+        }
 
         // 3. Update tracks for each peer
         for (let id in connections) {
@@ -139,6 +227,9 @@ function VideoMeetComponent() {
             track.onended = () => handleTrackEnded();
         });
     };
+
+
+
     const handleTrackEnded = () => {
         setVideo(false);
         setAudio(false);
@@ -149,7 +240,11 @@ function VideoMeetComponent() {
         ]);
 
         window.localStream = blackSilence;
-        localVideoref.current.srcObject = blackSilence;
+        
+        // Update video ref with black silence stream
+        if (localVideoref.current) {
+            localVideoref.current.srcObject = blackSilence;
+        }
 
         for (let id in connections) {
             const pc = connections[id];
@@ -161,41 +256,8 @@ function VideoMeetComponent() {
         }
     };
 
-    let getUserMedia = () => {
-        if ((video && videoAvailable) || (audio && audioAvailable)) {
-            navigator.mediaDevices.getUserMedia({ video: video, audio: audio })
-                .then((stream) => {
-                    if (!video) {
-                        let blackTrack = black();
-                        blackTrack.enabled = true;
-                        stream.addTrack(blackTrack);
-                    }
-                    if (!audio) {
-                        let silenceTrack = silence();
-                        // silenceTrack.enabled = true; // Keep disabled to ensure silence (oscillator produces sound)
-                        stream.addTrack(silenceTrack);
-                    }
-                    getUserMediaSuccess(stream);
-                })
-                .catch((e) => console.log(e))
-        } else {
-            try {
-                let tracks = localVideoref.current.srcObject.getTracks()
-                tracks.forEach(track => track.stop())
-            } catch (e) { }
 
-            let blackTrack = black();
-            let silenceTrack = silence();
-            blackTrack.enabled = true;
-            // silenceTrack.enabled = true;
-
-            let blackSilence = new MediaStream([blackTrack, silenceTrack]);
-            getUserMediaSuccess(blackSilence);
-        }
-    }
-
-
-    let connectToSocketServer = () => {
+    const connectToSocketServer = () => {
         socketRef.current = io.connect(server_url, { secure: false })
 
         socketRef.current.on('signal', gotMessageFromServer)
@@ -324,7 +386,7 @@ function VideoMeetComponent() {
             })
         })
     }
-    let gotMessageFromServer = (fromId, message) => {
+    const gotMessageFromServer = (fromId, message) => {
         var signal = JSON.parse(message)
 
         if (fromId !== socketIdRef.current) {
@@ -347,23 +409,28 @@ function VideoMeetComponent() {
     }
 
 
-    let handleVideo = () => {
+    const handleVideo = () => {
         setVideo(!video);
         // getUserMedia();
     }
-    let handleAudio = () => {
+    const handleAudio = () => {
         setAudio(!audio)
         // getUserMedia();
     }
-
-    let getDisplayMediaSuccess = (stream) => {
+    const getDisplayMediaSuccess = (stream) => {
         try {
             window.localStream.getTracks().forEach(track => track.stop())
         } catch (e) {
             console.log(e);
         }
         window.localStream = stream;
-        localVideoref.current.srcObject = stream;
+        
+        // Ensure video ref is updated (works for both preview and meeting video)
+        if (localVideoref.current) {
+            localVideoref.current.srcObject = stream;
+            // Force video to play
+            localVideoref.current.play().catch(e => console.log("Video play error:", e));
+        }
 
         for (let id in connections) {
             if (id === socketIdRef.current) continue;
@@ -389,14 +456,18 @@ function VideoMeetComponent() {
 
             let blackSilence = (...args) => new MediaStream([black(...args), silence()])
             window.localStream = blackSilence()
-            localVideoref.current.srcObject = window.localStream
+            
+            // Update video ref with black silence stream
+            if (localVideoref.current) {
+                localVideoref.current.srcObject = window.localStream;
+            }
 
             getUserMedia();
 
         })
 
     }
-    let getDisplayMedia = () => {
+    const getDisplayMedia = () => {
         if (screen) {
             if (navigator.mediaDevices.getDisplayMedia) {
                 navigator.mediaDevices.getDisplayMedia({ video: true, audio: true })
@@ -406,16 +477,13 @@ function VideoMeetComponent() {
             }
         }
     }
-    let handleScreen = () => {
+    const handleScreen = () => {
         setScreen(!screen)
     }
-
-
-
-    let handleChat = () => {
+    const handleChat = () => {
         setModal(!showModal)
     }
-    let sendMessage = () => {
+    const sendMessage = () => {
         const displayUsername = username || (userData && typeof userData === 'string' ? userData : 'User');
         socketRef.current.emit("chat-message", message, displayUsername);
         setMessage("");
@@ -436,16 +504,13 @@ function VideoMeetComponent() {
             setNewMessages((prevCount) => prevCount + 1);
         }
     };
-
-
-
-    let getMedia = () => {
+    const getMedia = () => {
         setVideo(videoAvailable);
         setAudio(audioAvailable);
         connectToSocketServer();
 
     }
-    let connect = () => {
+    const connect = () => {
         setAskForUsername(false);
         getMedia();
     }
@@ -484,14 +549,23 @@ function VideoMeetComponent() {
         }
     };
 
-
-
     return (
         <div>
             {askForUsername === true ?
                 <div className={styles.container}>
+                    <div className={styles.previewContainer}>
+                        <video className={styles.videoPreview} ref={localVideoref} autoPlay muted></video>
+                        <div className={styles.controls}>
+                            <IconButton onClick={handleVideo} className={!video ? styles.videoOff : ''}>
+                                {(video === true) ? <VideocamIcon /> : <VideocamOffIcon />}
+                            </IconButton>
+                            <IconButton onClick={handleAudio} className={!audio ? styles.videoOff : ''}>
+                                {(audio === true) ? <MicIcon /> : <MicOffIcon />}
+                            </IconButton>
+                        </div>
+                    </div>
                     <div className={styles.lobbyContainer}>
-                        <div className={styles.leftPart}>
+                        <div className={styles.rightPart}>
                             <h2 className={styles.title}>Enter into Lobby</h2>
                             <input
                                 type="text"
