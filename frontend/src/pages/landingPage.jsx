@@ -1,7 +1,7 @@
 // import '../App.css';
 import '../styles/landingPage.css';
 import { useNavigate } from 'react-router-dom';
-import { Video } from "lucide-react";
+import { Video, LogIn , LogOut , Users } from "lucide-react";
 import { AuthContext } from "../contexts/AuthContext";
 import { useContext } from "react";
 
@@ -21,11 +21,12 @@ function LandingPage() {
                         className="nav-btn guest-btn"
                         onClick={() => router("/home")}
                     >
-                        <i className="fas fa-user-friends"></i> Join as Guest
+                        <Users size={19} /> Join as Guest
                     </button>
 
                     {isAuthenticated ? (
                         <button className="nav-btn auth-btn" onClick={logout}>
+                            <LogOut size={19} />
                             Logout
                         </button>
                     ) : (
@@ -33,6 +34,7 @@ function LandingPage() {
                             className="nav-btn auth-btn"
                             onClick={() => router("/auth")}
                         >
+                            <LogIn size={19} />
                             Login
                         </button>
                     )}

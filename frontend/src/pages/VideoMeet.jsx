@@ -748,7 +748,7 @@ function VideoMeetComponent() {
                             {videos.map((video) => (
                                 <div key={video.socketId} className={styles.videoWrapper}>
                                     <video
-
+                                        className={styles.otherVideo}
                                         data-socket={video.socketId}
                                         ref={ref => {
                                             if (ref && video.stream) {
