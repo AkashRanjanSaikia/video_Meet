@@ -335,8 +335,8 @@
 
 /* Video box styling */
 .videoWrapper {
-  max-width: 25%;
-  max-height:25%;
+  max-width: 45%;
+  max-height:45%;
   position: relative;
   background: rgba(0, 0, 0);
   border-radius: 10px;
@@ -378,7 +378,7 @@
 
 }
 
-/* For 3 & 4 videos */
+
 .conferenceView:has(.videoWrapper:nth-child(3):nth-last-child(1)) .videoWrapper,
 .conferenceView:has(.videoWrapper:nth-child(4):nth-last-child(1)) .videoWrapper {
     max-width: 50%;

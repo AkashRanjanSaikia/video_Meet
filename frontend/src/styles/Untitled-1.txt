@@ -688,36 +688,43 @@ function VideoMeetComponent() {
                 :
                 <div className={styles.meetvideoContainer}>
 
-                    {showModal ?
-                        <div className={styles.chatRoom}>
-                            <div className={styles.chatContainer}>
-                                <div className={styles.chatHeader}>
-                                    <h1>Chat</h1>
-                                    <IconButton onClick={() => setModal(!showModal)} className={styles.closeButton}>
-                                        <CloseIcon />
-                                    </IconButton>
-                                </div>
-                                <div className={styles.chatingDisplay}>
-                                    {messages.map((item, index) => {
-                                        return (
-                                            <div key={index}>
-                                                <p>{item.sender}</p>
-                                                <p>{item.data}</p>
-                                            </div>
-                                        )
-                                    })}
-                                </div>
-                                <div className={styles.chatingArea}>
-
-                                    <TextField id="outlined-basic" value={message} onChange={(e) => { setMessage(e.target.value) }} label="Enter Your chat" />
-                                    <Button variant='contained' onClick={sendMessage}>Send</Button>
-                                </div>
-                            </div>
-
-                        </div> : <></>
-                    }
-
                     <div className={`${styles.conferenceView} ${showModal ? styles.chatOpen : ''}`}>
+
+                        {showModal ?
+                            <div className={styles.chatRoom}>
+                                <div className={styles.chatContainer}>
+                                    <div className={styles.chatHeader}>
+                                        <h1>Chat</h1>
+                                        <IconButton onClick={() => setModal(!showModal)} className={styles.closeButton}>
+                                            <CloseIcon />
+                                        </IconButton>
+                                    </div>
+                                    <div className={styles.chatingDisplay}>
+                                        {messages.map((item, index) => {
+                                            return (
+                                                <div key={index}>
+                                                    <p>{item.sender}</p>
+                                                    <p>{item.data}</p>
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
+                                    <div className={styles.chatingArea}>
+
+                                        <TextField id="outlined-basic" value={message} onChange={(e) => { setMessage(e.target.value) }} label="Enter Your chat" />
+                                        <Button variant='contained' onClick={sendMessage}>Send</Button>
+                                    </div>
+                                </div>
+
+                            </div> : <></>
+                        }
+
+                        <div className={styles.videoWrapper}>
+                            <video className={styles.userVideo} ref={localVideoref} autoPlay muted></video>
+                            <span className={styles.userName}>
+                                {username || (userData && typeof userData === 'string' ? userData : 'You')}
+                            </span>
+                        </div>
 
                         {videos.map((video) => (
                             <div key={video.socketId} className={styles.videoWrapper}>
@@ -738,14 +745,6 @@ function VideoMeetComponent() {
                             </div>
 
                         ))}
-
-                        <div className={styles.videoWrapper}>
-                            <video className={styles.userVideo} ref={localVideoref} autoPlay muted></video>
-                            <span className={styles.userName}>
-                                {username || (userData && typeof userData === 'string' ? userData : 'You')}
-                            </span>
-                        </div>
-                        
                     </div>
                     <div>
                         <div className={styles.meetingInfoContainer}>
