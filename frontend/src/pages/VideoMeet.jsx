@@ -14,10 +14,20 @@ import CloseIcon from '@mui/icons-material/Close';
 import GroupIcon from '@mui/icons-material/Group';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import PersonIcon from '@mui/icons-material/Person';
+import SettingsIcon from '@mui/icons-material/Settings';
+import HelpIcon from '@mui/icons-material/Help';
+import FullscreenIcon from '@mui/icons-material/Fullscreen';
+import { List, ListItem, ListItemText, ListItemAvatar, Avatar, Menu, MenuItem } from '@mui/material';
 import { AuthContext } from '../contexts/AuthContext';
 import { silence, black } from '../Helper/helper';
 import withValidMeeting from "../utils/withValidMeeting";
 import styles from '../styles/VideoMeet.module.css';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+
 
 
 const server_url = import.meta.env.VITE_BACKEND_URL;
@@ -45,6 +55,11 @@ function VideoMeetComponent() {
     const [audioPermissionDenied, setAudioPermissionDenied] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
+
+    // New states for Participants and More Features
+    const [showParticipants, setShowParticipants] = useState(false);
+    const [moreFeaturesAnchor, setMoreFeaturesAnchor] = useState(null);
+    const openMoreFeatures = Boolean(moreFeaturesAnchor);
 
     const [videos, setVideos] = useState([]); //others videos
     const [video, setVideo] = useState(false); //local video
@@ -579,6 +594,18 @@ function VideoMeetComponent() {
         getMedia();
     }
 
+    const handleMoreFeaturesClick = (event) => {
+        setMoreFeaturesAnchor(event.currentTarget);
+    };
+
+    const handleMoreFeaturesClose = () => {
+        setMoreFeaturesAnchor(null);
+    };
+
+    const handleParticipantsToggle = () => {
+        setShowParticipants(!showParticipants);
+    };
+
     const handleEndCall = useCallback(() => {
         try {
             // 1. Stop local media
@@ -747,6 +774,7 @@ function VideoMeetComponent() {
                         </div>
                         
                     </div>
+                    
                     <div>
                         <div className={styles.meetingInfoContainer}>
                             <p>{window.location.href.split('/').pop()}</p>
@@ -782,7 +810,7 @@ function VideoMeetComponent() {
 
                         </div>
                         <div className={styles.rightControls}>
-                            <IconButton >
+                            <IconButton onClick={handleParticipantsToggle} title="Participants">
                                 <GroupIcon />
                             </IconButton>
 
@@ -790,7 +818,7 @@ function VideoMeetComponent() {
                                 <IconButton onClick={handleChat}><ChatIcon /></IconButton>
                             </Badge>
 
-                            <IconButton >
+                            <IconButton onClick={handleMoreFeaturesClick} title="More Options">
                                 <MoreVertIcon />
                             </IconButton>
                         </div>
@@ -798,6 +826,83 @@ function VideoMeetComponent() {
                     </div>
                 </div>
             }
+            {/* Participants Dialog */}
+            <Dialog 
+                open={showParticipants} 
+                onClose={handleParticipantsToggle}
+                fullWidth
+                maxWidth="xs"
+            >
+                <DialogTitle>Participants ({videos.length + 1})</DialogTitle>
+                <DialogContent dividers>
+                    <List>
+                        {/* Local User */}
+                        <ListItem>
+                            <ListItemAvatar>
+                                <Avatar>
+                                    <PersonIcon />
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText 
+                                primary={username || (userData && typeof userData === 'string' ? userData : 'You')} 
+                                secondary="(You)" 
+                            />
+                        </ListItem>
+                        
+                        {/* Remote Users */}
+                        {videos.map((video) => (
+                            <ListItem key={video.socketId}>
+                                <ListItemAvatar>
+                                    <Avatar>
+                                        <PersonIcon />
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText 
+                                    primary={userNamesMap[video.socketId] || 'User'} 
+                                />
+                            </ListItem>
+                        ))}
+                    </List>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleParticipantsToggle} color="primary">
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* More Features Menu */}
+            <Menu
+                anchorEl={moreFeaturesAnchor}
+                open={openMoreFeatures}
+                onClose={handleMoreFeaturesClose}
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                transformOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                }}
+            >
+                <MenuItem onClick={handleMoreFeaturesClose}>
+                    <SettingsIcon sx={{ mr: 1 }} /> Settings
+                </MenuItem>
+                <MenuItem onClick={() => {
+                    if (document.fullscreenElement) {
+                        document.exitFullscreen();
+                    } else {
+                        document.documentElement.requestFullscreen();
+                    }
+                    handleMoreFeaturesClose();
+                }}>
+                    <FullscreenIcon sx={{ mr: 1 }} /> Full Screen
+                </MenuItem>
+                <MenuItem onClick={handleMoreFeaturesClose}>
+                    <HelpIcon sx={{ mr: 1 }} /> Help
+                </MenuItem>
+            </Menu>
+
             <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={6000}
@@ -823,3 +928,4 @@ function VideoMeetComponent() {
     )
 }
 export default withValidMeeting(VideoMeetComponent);
+   

@@ -615,13 +615,37 @@
   }
 
   .buttonContainers {
-    bottom: 8px;
-    left: 0;
-    transform: none;
-    width: 100%;
-    justify-content: space-around;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 400px;
+    justify-content: space-evenly;
     padding: 10px 12px;
-    border-radius: 0;
+    border-radius: 20px;
+    background: rgba(30, 67, 135, 0.65);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  }
+
+  .meetingInfoContainer {
+    top: 20px;
+    bottom: auto;
+    left: 16px;
+    transform: none;
+    background: rgba(30, 67, 135, 0.55);
+    backdrop-filter: blur(12px);
+    font-size: 0.8rem;
+    max-width: 45%;
+  }
+
+  .rightControls {
+    top: 20px;
+    bottom: auto;
+    right: 16px;
+    transform: none;
+    background: rgba(30, 67, 135, 0.55);
+    backdrop-filter: blur(12px);
+    gap: 0.5rem;
   }
   .buttonContainers button {
     width: 36px;
