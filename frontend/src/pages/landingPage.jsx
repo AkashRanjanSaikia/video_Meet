@@ -3,7 +3,7 @@ import '../styles/landingPage.css';
 import { useNavigate } from 'react-router-dom';
 import { Video, LogIn, LogOut, Users } from "lucide-react";
 import { AuthContext } from "../contexts/AuthContext";
-import { useContext } from "react";
+import { useContext , useEffect } from "react";
 
 function LandingPage() {
     const { isAuthenticated, logout } = useContext(AuthContext);
