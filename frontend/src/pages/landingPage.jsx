@@ -5,11 +5,12 @@ import { Video, LogIn, LogOut, Users } from "lucide-react";
 import { AuthContext } from "../contexts/AuthContext";
 import { useContext , useEffect } from "react";
 
+
 function LandingPage() {
     const { isAuthenticated, logout } = useContext(AuthContext);
     const router = useNavigate();
     useEffect(() => {
-        fetch(process.env.VITE_BACKEND_URL + "/health")
+        fetch(import.meta.env.VITE_BACKEND_URL + "/health")
             .catch(() => null);
     }, []);
 
