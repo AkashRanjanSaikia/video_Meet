@@ -26,6 +26,10 @@ app.use("/api/meetings", meetingRoutes);
 app.get("/" ,(req,res)=>{
     res.json("Welcome Akash");
 })
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
+
 
 const start = async()=>{
     const connectDb = await mongoose.connect(process.env.MONGO_URI);

@@ -1,14 +1,18 @@
 // import '../App.css';
 import '../styles/landingPage.css';
 import { useNavigate } from 'react-router-dom';
-import { Video, LogIn , LogOut , Users } from "lucide-react";
+import { Video, LogIn, LogOut, Users } from "lucide-react";
 import { AuthContext } from "../contexts/AuthContext";
 import { useContext } from "react";
 
 function LandingPage() {
     const { isAuthenticated, logout } = useContext(AuthContext);
     const router = useNavigate();
-    
+    useEffect(() => {
+        fetch(process.env.VITE_BACKEND_URL + "/health")
+            .catch(() => null);
+    }, []);
+
 
     return (
         <div className="landingPageContainer">
@@ -53,7 +57,7 @@ function LandingPage() {
                     </h1>
                     <p className="hero-subtitle">Crystal-clear HD video, seamless screen sharing, and enterprise-grade security for remote collaboration that feels natural.</p>
                     <div className="cta-container">
-                        <button className="cta-button primary" onClick={() => { isAuthenticated? router("/home") : router("/auth") }}>
+                        <button className="cta-button primary" onClick={() => { isAuthenticated ? router("/home") : router("/auth") }}>
                             Get Started
                         </button>
                         <button className="cta-button secondary" onClick={() => { router("/home") }}>
