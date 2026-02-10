@@ -584,10 +584,7 @@ function VideoMeetComponent() {
         }
     };
     const getMedia = () => {
-        setVideo(videoAvailable);
-        setAudio(audioAvailable);
         connectToSocketServer();
-
     }
     const connect = () => {
         setAskForUsername(false);
