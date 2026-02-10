@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useContext, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import io from "socket.io-client";
 import { IconButton, TextField, Button, Badge, Snackbar, Alert } from '@mui/material';
 import VideocamIcon from '@mui/icons-material/Videocam';
@@ -14,6 +14,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import GroupIcon from '@mui/icons-material/Group';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import ShareIcon from '@mui/icons-material/Share';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 import HelpIcon from '@mui/icons-material/Help';
@@ -41,6 +42,7 @@ const peerConfigConnections = {
 
 function VideoMeetComponent() {
     const routeTo = useNavigate();
+    const { url } = useParams();
     const { userData } = useContext(AuthContext);
 
     const socketRef = useRef();
@@ -78,7 +80,12 @@ function VideoMeetComponent() {
 
     useEffect(() => {
         if (userData && typeof userData === 'string') {
-            setUsername(userData);
+            setUsername(userData.charAt(0).toUpperCase() + userData.slice(1));
+        } else {
+            const storedUsername = localStorage.getItem("userName");
+            if (storedUsername) {
+                setUsername(storedUsername.charAt(0).toUpperCase() + storedUsername.slice(1));
+            }
         }
         getPermissions();
     }, [])
@@ -108,58 +115,22 @@ function VideoMeetComponent() {
     }, [askForUsername])
 
 
+
     const getPermissions = async () => {
-        console.log("getPermissions : ", video, audio);
         try {
-            // 1. Request both at once (Standard WebRTC Practice)
-            const stream = await navigator.mediaDevices.getUserMedia({
-                video: video,
-                audio: audio
-            });
-            // 2. Handle Success
-            if (stream) {
-                if (video) {
-                    setVideoAvailable(true);
-                    setVideoPermissionDenied(false);
-                }
-                if (audio) {
-                    setAudioAvailable(true);
-                    setAudioPermissionDenied(false);
-                }
-
-                // Store in a global/window variable if needed for your signaling logic
-                window.localStream = stream;
-
-                // 3. Attach to Video Element (preview)
-                if (localVideoref.current) {
-                    localVideoref.current.srcObject = stream;
-                    // Force video to play
-                    localVideoref.current.play().catch(e => console.log("Video play error:", e));
-                }
-            }
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            setVideoAvailable(true);
+            setAudioAvailable(true);
+            // Stop the tracks to release devices, as we are in "off" state initially
+            stream.getTracks().forEach(track => track.stop());
         } catch (error) {
             console.error("Error accessing media devices:", error.name);
-
             if (error.name === 'NotAllowedError') {
-                if (video) {
-                    setVideoPermissionDenied(true);
-                    setVideoAvailable(false);
-                }
-                if (audio) {
-                    setAudioPermissionDenied(true);
-                    setAudioAvailable(false);
-                }
+                setVideoPermissionDenied(true);
+                setAudioPermissionDenied(true);
                 setSnackbarMessage("Permissions were denied. Please enable camera/mic access in your browser settings.");
                 setSnackbarOpen(true);
             } else if (error.name === 'NotFoundError') {
-                if (video) {
-                    setVideoPermissionDenied(true);
-                    setVideoAvailable(false);
-                }
-                if (audio) {
-                    setAudioPermissionDenied(true);
-                    setAudioAvailable(false);
-                }
                 setSnackbarMessage("No camera or microphone found on this device.");
                 setSnackbarOpen(true);
             }
@@ -587,6 +558,13 @@ function VideoMeetComponent() {
         connectToSocketServer();
     }
     const connect = () => {
+        // Validation for video and audio permissions
+        if (!videoAvailable || !audioAvailable) {
+            setSnackbarMessage("Please enable both camera and microphone to continue.");
+            setSnackbarOpen(true);
+            return;
+        }
+
         setAskForUsername(false);
         getMedia();
     }
@@ -644,9 +622,6 @@ function VideoMeetComponent() {
         const handleBeforeUnload = (e) => {
             // Only trigger cleanup if user is actually in the meeting
             if (!askForUsername && socketRef.current) {
-                // Call handleEndCall to clean up resources
-                // Note: Some cleanup may not complete due to browser limitations,
-                // but the server will catch the disconnect event
                 handleEndCall();
             }
         };
@@ -776,11 +751,27 @@ function VideoMeetComponent() {
                         <div className={styles.meetingInfoContainer}>
                             <p>{window.location.href.split('/').pop()}</p>
                             <IconButton onClick={() => {
-                                navigator.clipboard.writeText(window.location.href);
-                                setSnackbarMessage("Meeting Link Copied to Clipboard");
+                                navigator.clipboard.writeText(url);
+                                setSnackbarMessage("Meeting Code Copied to Clipboard");
                                 setSnackbarOpen(true);
                             }}>
                                 <ContentCopyIcon />
+                            </IconButton>
+                            <IconButton onClick={() => {
+                                if (navigator.share) {
+                                    navigator.share({
+                                        title: 'Meeting Link',
+                                        text: 'Join my meeting!',
+                                        url: window.location.href,
+                                    })
+                                    .catch((error) => console.log('Error sharing', error));
+                                } else {
+                                    navigator.clipboard.writeText(window.location.href);
+                                    setSnackbarMessage("Meeting URL Copied to Clipboard");
+                                    setSnackbarOpen(true);
+                                }
+                            }}>
+                                <ShareIcon />
                             </IconButton>
                         </div>
 

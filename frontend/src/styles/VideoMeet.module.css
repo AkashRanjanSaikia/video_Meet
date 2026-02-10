@@ -294,6 +294,12 @@
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
+@media (max-width: 768px) {
+  .meetingInfoContainer p {
+    display: none;
+  }
+}
+
 /* Hang-up button special styling */
 .buttonContainers button.danger {
   background: rgba(244, 67, 54, 0.85);
