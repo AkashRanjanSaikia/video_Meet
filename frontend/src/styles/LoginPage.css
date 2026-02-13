@@ -4,7 +4,6 @@
 .auth-container {
   min-height: 100vh;
   display: flex;
-  align-items: center;
   justify-content: center;
   background: linear-gradient(180deg, hsl(220 25% 12%) 0%, hsl(220 25% 10%) 100%);
   padding: 1rem;
@@ -15,6 +14,7 @@
 .auth-wrapper {
   width: 100%;
   max-width: 420px;
+  margin-top: 2%;
 }
 
 /* Card */
@@ -281,6 +281,7 @@
   }
 
   .auth-wrapper {
+    margin-top: 10%;
     width: 95%;
     max-width: 380px;
     margin-bottom: 4px;
