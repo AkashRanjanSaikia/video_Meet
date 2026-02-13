@@ -3,6 +3,7 @@
   min-height: 100vh;
   background: linear-gradient(180deg, hsl(220 25% 12%) 0%, hsl(220 25% 10%) 100%);
   color: white;
+  font-family: "Poppins", sans-serif;
 }
 
 /* Join Meeting Styles */

@@ -8,6 +8,7 @@
   justify-content: center;
   background: linear-gradient(180deg, hsl(220 25% 12%) 0%, hsl(220 25% 10%) 100%);
   padding: 1rem;
+  font-family: "Poppins", sans-serif;
 }
 
 /* Wrapper */
