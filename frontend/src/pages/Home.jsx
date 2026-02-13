@@ -54,7 +54,7 @@ const Home = () => {
 
   return (
     <>
-      <div className="container">
+      <div className="home-page-root">
         <Navbar />
         <div className="join-container">
           <div className="join-card">

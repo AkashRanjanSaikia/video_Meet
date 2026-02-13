@@ -2,7 +2,6 @@
   min-height: 100vh;
   background: linear-gradient(180deg, hsl(220 25% 12%) 0%, hsl(220 25% 10%) 100%);
   color: #e5e7eb;
-  font-family: 'Poppins', sans-serif;
 }
 
 /* App Bar */
@@ -159,6 +158,9 @@
   .history-appbar-container {
     padding: 12px 14px;
   }
+  .history-appbar-title {
+    font-size: 1.25rem;
+  }
   .history-main-container {
     padding: 16px 14px 28px;
   }
@@ -175,6 +177,24 @@
 }
 
 @media (max-width: 480px) {
+  .history-appbar-title {
+    font-size: 1.1rem;
+    gap: 6px;
+  }
+  .history-appbar-container img {
+    width: 24px;
+    height: 24px;
+  }
+  .history-back-btn {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
+  .history-back-btn-text {
+     display: none;
+   }
+   .history-back-btn .history-icon {
+     margin-right: 0 !important;
+   }
   .history-heading {
     font-size: 1.2rem;
   }

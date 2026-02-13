@@ -1,25 +1,24 @@
-.container{
+.home-page-root {
   width: 100vw;
   min-height: 100vh;
   background: linear-gradient(180deg, hsl(220 25% 12%) 0%, hsl(220 25% 10%) 100%);
   color: white;
-  font-family: 'Poppins', sans-serif;
 }
 
 /* Join Meeting Styles */
-.input-with-copy {
+.home-page-root .input-with-copy {
   position: relative;
   display: flex;
   width: 100%;
   margin-bottom: 1rem;
 }
 
-.input-with-copy input {
+.home-page-root .input-with-copy input {
   width: 100%;
   padding-right: 40px; /* Space for the copy button */
 }
 
-.copy-btn {
+.home-page-root .copy-btn {
   position: absolute;
   right: 8px;
   top: 50%;
@@ -35,22 +34,21 @@
   justify-content: center;
 }
 
-.copy-btn:hover {
+.home-page-root .copy-btn:hover {
   color: #FF9839;
   background-color: rgba(255, 152, 57, 0.1);
 }
 
 /* Page Background */
-.join-container {
+.home-page-root .join-container {
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 3rem;
-  font-family: 'Poppins', sans-serif;
 }
 
 /* Card Layout */
-.join-card {
+.home-page-root .join-card {
   width: 100%;
   max-width: 420px;
   background: rgba(17, 25, 40, 0.25);
@@ -67,7 +65,7 @@
   overflow: hidden;
 }
 
-.join-card::before {
+.home-page-root .join-card::before {
   content: '';
   position: absolute;
   top: 0;
@@ -87,31 +85,8 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Header */
-.join-header {
-  text-align: center;
-  margin-bottom: 1.5rem;
-}
-.join-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, #11defe, #0db5d0);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.join-title .highlight{
-  -webkit-text-fill-color: #ffffff;
-  color: #ffffff;
-}
-
-.join-subtitle {
-  color: #9ca3af;
-  font-size: 0.95rem;
-}
-
 /* Toggle Buttons */
-.mode-toggle {
+.home-page-root .mode-toggle {
   display: flex;
   justify-content: space-between;
   background: rgba(31, 41, 55, 0.8);
@@ -120,7 +95,7 @@
   margin-bottom: 1.5rem;
   gap: 6px; /* added space between buttons */
 }
-.toggle-btn {
+.home-page-root .toggle-btn {
   flex: 1;
   background: #131922;
   border: none;
@@ -134,42 +109,42 @@
   cursor: pointer;
   transition: all 0.3s ease;
 }
-.toggle-btn:hover {
+.home-page-root .toggle-btn:hover {
   background: rgba(17, 222, 254, 0.1);
 }
-.toggle-btn.active {
+.home-page-root .toggle-btn.active {
   background: #11defe;
   color: #000;
   font-weight: 600;
 }
 
 /* Content */
-.card-content {
+.home-page-root .card-content {
   text-align: center;
 }
-.card-content h2 {
+.home-page-root .card-content h2 {
   font-size: 1.3rem;
   margin-bottom: 0.3rem;
   color: #e5e7eb;
 }
-.card-content p {
+.home-page-root .card-content p {
   font-size: 0.9rem;
   color: #9ca3af;
   margin-bottom: 1rem;
 }
 
 /* Form */
-form.join-form {
+.home-page-root form.join-form {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
-label {
+.home-page-root label {
   text-align: left;
   font-weight: 500;
   color: #d1d5db;
 }
-input {
+.home-page-root input {
   padding: 10px 12px;
   border-radius: 8px;
   border: 1px solid #374151;
@@ -178,12 +153,12 @@ input {
   background: rgba(31, 41, 55, 0.8);
   color: #f9fafb;
 }
-input:focus {
+.home-page-root input:focus {
   border-color: #11defe;
   box-shadow: 0 0 0 3px rgba(17, 222, 254, 0.2);
 }
 /* Buttons */
-.action-btn {
+.home-page-root .action-btn {
   width: 100%;
   padding: 12px;
   border: none;
@@ -195,23 +170,23 @@ input:focus {
   margin-top: 10px;
   transition: all 0.3s ease;
 }
-.action-btn:hover {
+.home-page-root .action-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(17, 222, 254, 0.3);
 }
-.action-btn.secondary {
+.home-page-root .action-btn.secondary {
   background: linear-gradient(135deg, #11defe, #0db5d0);
 }
-.action-btn.secondary:hover {
+.home-page-root .action-btn.secondary:hover {
   background: linear-gradient(135deg, #0db5d0, #11defe);
 }
 
 /* Back Button */
-.back-btn-container {
+.home-page-root .back-btn-container {
   text-align: center;
   margin-top: 1rem;
 }
-.back-btn {
+.home-page-root .back-btn {
   background: transparent;
   border: none;
   color: #9ca3af;
@@ -221,40 +196,46 @@ input:focus {
   align-items: center;
   transition: color 0.2s;
 }
-.back-btn:hover {
+.home-page-root .back-btn:hover {
   color: #11defe
 }
 
 @media (max-width: 768px) {
-  .join-container {
-    padding: 1.25rem;
-  }
-  .join-card {
-    max-width: 75%;
+  .home-page-root .join-container {
     padding: 1.5rem;
   }
-  .mode-toggle {
+  .home-page-root .join-card {
+    max-width: 400px;
+    width: 90%;
+    padding: 1.75rem;
+  }
+  .home-page-root .mode-toggle {
     flex-direction: column;
   }
-  .toggle-btn {
+  .home-page-root .toggle-btn {
     padding: 12px;
   }
-  .input-with-copy {
+  .home-page-root .input-with-copy {
     margin-bottom: 0.75rem;
   }
 }
 
 @media (max-width: 480px) {
-  .join-card {
+  .home-page-root .join-container {
     padding: 1rem;
   }
-  .toggle-btn {
+  .home-page-root .join-card {
+    width: 95%;
+    padding: 1.25rem;
+  }
+  .home-page-root .toggle-btn {
     font-size: 0.9rem;
+    padding: 10px;
   }
-  .join-title {
-    font-size: 2rem;
+  .home-page-root .join-title {
+    font-size: 1.75rem;
   }
-  .join-subtitle {
-    font-size: 0.8rem;
+  .home-page-root .card-content h2 {
+    font-size: 1.1rem;
   }
 }

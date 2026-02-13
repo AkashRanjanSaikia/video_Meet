@@ -104,7 +104,7 @@ export default function History() {
                     </div>
                     <button className="history-back-btn" onClick={goHome}>
                         <ArrowBackIcon />
-                        Back to Home
+                        <span className="history-back-btn-text">Back to Home</span>
                     </button>
                 </div>
             </header>

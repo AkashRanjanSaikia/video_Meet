@@ -7,7 +7,6 @@
     hsl(220 25% 10%) 100%
   );
   color: white;
-  font-family: "Poppins", sans-serif;
 }
 
 /* Landing Page Styles */
@@ -204,7 +203,7 @@
     padding: 1rem 1.25rem;
   }
   .landingPageContainer nav h1 {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
   }
   .navlist {
     gap: 0.5rem;
@@ -249,7 +248,7 @@
     padding: 1rem 1.25rem;
   }
   .landingPageContainer nav h1 {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
   }
   .navlist {
     gap: 0.5rem;

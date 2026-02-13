@@ -6,7 +6,6 @@
   align-items: center;
   gap: 3rem;
   background: linear-gradient(180deg, hsl(220 25% 12%) 0%, hsl(220 25% 10%) 100%);
-  font-family: 'Poppins', sans-serif;
 }
 /* .dark{
   background-color: #9b1b1b;
