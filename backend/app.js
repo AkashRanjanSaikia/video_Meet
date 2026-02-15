@@ -27,7 +27,8 @@ app.get("/" ,(req,res)=>{
     res.json("Welcome Akash");
 })
 app.get("/health", (req, res) => {
-  res.status(200).json({ status: "ok" });
+    console.log("Health check received");
+    res.status(200).json({ status: "ok" });
 });
 
 
