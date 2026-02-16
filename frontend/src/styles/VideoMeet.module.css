@@ -225,7 +225,7 @@
 
 /* Controls bar: glassmorphism + subtle glow */
 .buttonContainers, .rightControls {
-  position: fixed;
+  position: absolute;
   bottom: 8px;
   display: flex;
   justify-content: center;
