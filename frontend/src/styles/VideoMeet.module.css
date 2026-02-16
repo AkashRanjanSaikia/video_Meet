@@ -453,6 +453,10 @@
     max-width: 90%;
     max-height: none;
   }
+
+  .conferenceView:has(.videoWrapper:nth-child(1):nth-last-child(1)) .videoWrapper {
+    height: 94%;
+  }
 }
 
 
