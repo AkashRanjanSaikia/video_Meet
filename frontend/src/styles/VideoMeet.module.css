@@ -426,6 +426,7 @@
   border-radius: inherit;
   background-color: black;
   transform: scaleX(-1); /* Mirror effect */
+  /* aspect-ratio: 4/3; */
 }
 /* For One video */
 .conferenceView:has(.videoWrapper:nth-child(1):nth-last-child(1))
@@ -695,7 +696,7 @@
     .videoWrapper {
     max-width: 100%;
     width: 85%;
-    height: 96%;
+    height: 97%;
   }
 
   .conferenceView:has(.videoWrapper:nth-child(2):nth-last-child(1)) {
