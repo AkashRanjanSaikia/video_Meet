@@ -230,7 +230,7 @@
 .buttonContainers,
 .rightControls {
   position: absolute;
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -690,6 +690,12 @@
   .buttonContainers button {
     width: 34px;
     height: 34px;
+  }
+  .conferenceView:has(.videoWrapper:nth-child(1):nth-last-child(1))
+    .videoWrapper {
+    max-width: 100%;
+    width: 85%;
+    height: 98%;
   }
 
   .conferenceView:has(.videoWrapper:nth-child(2):nth-last-child(1)) {
