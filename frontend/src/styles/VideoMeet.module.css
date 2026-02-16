@@ -695,7 +695,7 @@
     .videoWrapper {
     max-width: 100%;
     width: 85%;
-    height: 98%;
+    height: 96%;
   }
 
   .conferenceView:has(.videoWrapper:nth-child(2):nth-last-child(1)) {
