@@ -214,7 +214,7 @@
 /* Video meeting styles */
 .meetvideoContainer {
   position: relative;
-  height: 100dvh;
+  height: 98dvh;
   width: 100%;
   background: linear-gradient(180deg, hsl(220 25% 12%) 0%, hsl(220 25% 10%) 100%);
   overflow: hidden;
@@ -226,7 +226,7 @@
 /* Controls bar: glassmorphism + subtle glow */
 .buttonContainers, .rightControls {
   position: absolute;
-  bottom: 8px;
+  bottom: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
