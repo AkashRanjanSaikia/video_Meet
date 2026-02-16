@@ -90,6 +90,36 @@ function VideoMeetComponent() {
         getPermissions();
     }, [])
 
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+
+        const setViewportHeight = () => {
+            const viewport = window.visualViewport;
+            const height = (viewport ? viewport.height : window.innerHeight) * 0.01;
+            document.documentElement.style.setProperty('--vh', `${height}px`);
+        };
+
+        setViewportHeight();
+
+        const viewport = window.visualViewport;
+
+        window.addEventListener('resize', setViewportHeight);
+        window.addEventListener('orientationchange', setViewportHeight);
+        if (viewport) {
+            viewport.addEventListener('resize', setViewportHeight);
+            viewport.addEventListener('scroll', setViewportHeight);
+        }
+
+        return () => {
+            window.removeEventListener('resize', setViewportHeight);
+            window.removeEventListener('orientationchange', setViewportHeight);
+            if (viewport) {
+                viewport.removeEventListener('resize', setViewportHeight);
+                viewport.removeEventListener('scroll', setViewportHeight);
+            }
+        };
+    }, []);
+
 
     useEffect(() => {
         if (video !== undefined && audio !== undefined) {

@@ -1,5 +1,9 @@
+:root {
+  --vh: 1vh;
+}
+
 .container {
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -212,7 +216,7 @@
 /* Video meeting styles */
 .meetvideoContainer {
   position: relative;
-  height:100vh;
+  height: calc(var(--vh, 1vh) * 100);
   width: 100%;
   background: linear-gradient(
     180deg,
@@ -226,7 +230,7 @@
 .buttonContainers,
 .rightControls {
   position: absolute;
-  bottom: 10px;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -244,7 +248,7 @@
 }
 .meetingInfoContainer {
   position: absolute;
-  bottom: 8px;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -608,7 +612,7 @@
     gap: 0.5rem;
     padding: 0.5rem;
     padding-bottom: 70px;
-    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
   }
   /* On mobile, chat takes full width, so no padding needed */
   /* .conferenceView.chatOpen {
@@ -636,7 +640,7 @@
   } */
 
   .buttonContainers {
-    bottom: 5px;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 5px);
     left: 50%;
     transform: translateX(-50%);
     width: 90%;
