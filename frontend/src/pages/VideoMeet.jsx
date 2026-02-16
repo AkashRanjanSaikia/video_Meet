@@ -522,8 +522,12 @@ function VideoMeetComponent() {
             if (navigator.mediaDevices.getDisplayMedia) {
                 navigator.mediaDevices.getDisplayMedia({ video: true, audio: true })
                     .then(getDisplayMediaSuccess)
-                    .then((stream) => { })
-                    .catch((e) => { console.log(e) });
+                    .catch((e) => {
+                        console.log(e);
+                        setScreen(false);
+                    });
+            } else {
+                setScreen(false);
             }
         }
     }
@@ -789,7 +793,7 @@ function VideoMeetComponent() {
                                 {(audio === true) ? <MicIcon /> : <MicOffIcon />}
                             </IconButton>
 
-                            <IconButton onClick={handleScreen}>
+                            <IconButton onClick={handleScreen} className={styles.hideOnSmall}>
                                 {(screen === true) ? <ScreenShareIcon /> : <StopScreenShareIcon />}
                             </IconButton>
                             <IconButton onClick={handleEndCall} className={styles.danger}>

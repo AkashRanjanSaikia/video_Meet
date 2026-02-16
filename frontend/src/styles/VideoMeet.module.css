@@ -297,6 +297,10 @@
   .meetingInfoContainer p {
     display: none;
   }
+
+  .hideOnSmall {
+    display: none !important;
+  }
 }
 
 /* Hang-up button special styling */
