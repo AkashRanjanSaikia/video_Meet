@@ -47,7 +47,7 @@ cd backend
 npm install
 
 # Frontend dependencies
-cd ../frontend
+cd frontend
 npm install
 ```
 
@@ -76,12 +76,6 @@ npm run dev
 ```
 
 This runs the backend with Nodemon on the port specified in `.env` (or `8000` by default).
-
-You can verify it by visiting:
-
-```bash
-http://localhost:8000/health
-```
 
 ### Start the frontend (React + Vite)
 
