@@ -40,6 +40,32 @@ const peerConfigConnections = {
     ]
 }
 
+const RemoteVideo = ({ stream, socketId, username }) => {
+    const ref = useRef(null);
+
+    useEffect(() => {
+        if (ref.current && ref.current.srcObject !== stream) {
+            ref.current.srcObject = stream;
+            ref.current.play().catch(() => { });
+        }
+    }, [stream]);
+
+    return (
+        <div className={styles.videoWrapper}>
+            <video
+                className={styles.otherVideo}
+                data-socket={socketId}
+                ref={ref}
+                autoPlay
+            >
+            </video>
+            <span className={styles.userName}>
+                {username || 'User'}
+            </span>
+        </div>
+    );
+};
+
 function VideoMeetComponent() {
     const routeTo = useNavigate();
     const { url } = useParams();
@@ -77,6 +103,10 @@ function VideoMeetComponent() {
     const [askForUsername, setAskForUsername] = useState(true);
     const [username, setUsername] = useState("");
     const [userNamesMap, setUserNamesMap] = useState({});
+
+    useEffect(() => {
+        console.log("VIDEO MOUNTED");
+    }, []);
 
     useEffect(() => {
         if (userData && typeof userData === 'string') {
@@ -753,23 +783,12 @@ function VideoMeetComponent() {
                     <div className={`${styles.conferenceView} ${showModal ? styles.chatOpen : ''}`}>
 
                         {videos.map((video) => (
-                            <div key={video.socketId} className={styles.videoWrapper}>
-                                <video
-                                    className={styles.otherVideo}
-                                    data-socket={video.socketId}
-                                    ref={ref => {
-                                        if (ref && video.stream) {
-                                            ref.srcObject = video.stream;
-                                        }
-                                    }}
-                                    autoPlay
-                                >
-                                </video>
-                                <span className={styles.userName}>
-                                    {userNamesMap[video.socketId] || 'User'}
-                                </span>
-                            </div>
-
+                            <RemoteVideo
+                                key={video.socketId}
+                                stream={video.stream}
+                                socketId={video.socketId}
+                                username={userNamesMap[video.socketId]}
+                            />
                         ))}
 
                         <div className={styles.videoWrapper}>
@@ -778,9 +797,9 @@ function VideoMeetComponent() {
                                 {username || (userData && typeof userData === 'string' ? userData : 'You')}
                             </span>
                         </div>
-                        
+
                     </div>
-                    
+
                     <div>
                         <div className={styles.meetingInfoContainer}>
                             <p>{window.location.href.split('/').pop()}</p>
@@ -798,7 +817,7 @@ function VideoMeetComponent() {
                                         text: 'Join my meeting!',
                                         url: window.location.href,
                                     })
-                                    .catch((error) => console.log('Error sharing', error));
+                                        .catch((error) => console.log('Error sharing', error));
                                 } else {
                                     navigator.clipboard.writeText(window.location.href);
                                     setSnackbarMessage("Meeting URL Copied to Clipboard");
@@ -849,8 +868,8 @@ function VideoMeetComponent() {
                 </div>
             }
             {/* Participants Dialog */}
-            <Dialog 
-                open={showParticipants} 
+            <Dialog
+                open={showParticipants}
                 onClose={handleParticipantsToggle}
                 fullWidth
                 maxWidth="xs"
@@ -865,12 +884,12 @@ function VideoMeetComponent() {
                                     <PersonIcon />
                                 </Avatar>
                             </ListItemAvatar>
-                            <ListItemText 
-                                primary={username || (userData && typeof userData === 'string' ? userData : 'You')} 
-                                secondary="(You)" 
+                            <ListItemText
+                                primary={username || (userData && typeof userData === 'string' ? userData : 'You')}
+                                secondary="(You)"
                             />
                         </ListItem>
-                        
+
                         {/* Remote Users */}
                         {videos.map((video) => (
                             <ListItem key={video.socketId}>
@@ -879,8 +898,8 @@ function VideoMeetComponent() {
                                         <PersonIcon />
                                     </Avatar>
                                 </ListItemAvatar>
-                                <ListItemText 
-                                    primary={userNamesMap[video.socketId] || 'User'} 
+                                <ListItemText
+                                    primary={userNamesMap[video.socketId] || 'User'}
                                 />
                             </ListItem>
                         ))}
@@ -950,4 +969,3 @@ function VideoMeetComponent() {
     )
 }
 export default withValidMeeting(VideoMeetComponent);
-   
